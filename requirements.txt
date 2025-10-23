@@ -1,0 +1,7 @@
+numpy
+matplotlib
+tqdm
+pytest
+jupyterlab
+black
+pre-commit

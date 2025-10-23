@@ -1,0 +1,25 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.env
+.venv/
+venv/
+.Python
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Data/results
+data/
+results/
+*.npz
+*.npy
+
+# macOS
+.DS_Store
+
+# IDEs
+.vscode/
+.idea/
