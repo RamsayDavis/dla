@@ -369,7 +369,7 @@ def plot_cluster_from_result(result, save_path=None, show=False, cmap="magma", d
         particle_radius = meta.get("particle_radius", 0.5)  # Default from continuous_dla.py
         render_continuous(x_coords, y_coords, particle_radius, title=title, cmap=cmap, 
                          save_path=save_path, show=show, dpi=dpi)
-    elif model_type in ("koh", "lattice") and has_coords:
+    elif model_type in ("koh", "lattice","koh_optimized") and has_coords:
         # Lattice model: use imshow with interpolation='none'
         x_coords = np.asarray(meta["x_coords"])
         y_coords = np.asarray(meta["y_coords"])
@@ -449,7 +449,7 @@ def main():
         particle_radius = meta.get("particle_radius", 0.5)  # Default from continuous_dla.py
         render_continuous(x_coords, y_coords, particle_radius, title=title, cmap=args.cmap, 
                          save_path=args.out, show=args.show, dpi=300)
-    elif model_type in ("koh", "lattice") and has_coords:
+    elif model_type in ("koh", "lattice","koh_optimized") and has_coords:
         # Lattice model: use imshow with interpolation='none'
         x_coords = np.asarray(meta["x_coords"])
         y_coords = np.asarray(meta["y_coords"])

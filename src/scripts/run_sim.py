@@ -10,7 +10,15 @@ ROOT = Path(__file__).resolve().parents[2]
 if str(ROOT) not in sys.path:
     sys.path.append(str(ROOT))
 
-from src.dla_sim import koh_lattice2, lattice, offlattice, utils, continuous_dla  # type: ignore[import]
+from src.dla_sim import (
+    koh_lattice2,
+    koh_lattice_optimized,
+    lattice,
+    offlattice,
+    utils,
+    continuous_dla,
+    bell_off,
+)  # type: ignore[import]
 from src.scripts import plot_cluster  # type: ignore[import]
 
 
@@ -53,6 +61,16 @@ MODEL_REGISTRY = {
             "seed": args.seed,
         },
     },
+    "koh_optimized": {
+        "runner": koh_lattice_optimized.run_model,
+        "defaults": {"num_particles": 5000, "lmax": 10},
+        "cli": lambda args: {
+            "num_particles": args.num,
+            "lmax": args.koh_lmax,
+            "data_dir": args.koh_data,
+            "seed": args.seed,
+        },
+    },
     "continuous": {
         "runner": continuous_dla.run_model,
         "defaults": {
@@ -69,6 +87,20 @@ MODEL_REGISTRY = {
             "particle_radius": args.particle_radius,
             "grid_resolution": args.continuous_grid_res,
             "grid_padding": args.continuous_grid_padding,
+            "seed": args.seed,
+        },
+    },
+    "bell_off": {
+        "runner": bell_off.run_model,
+        "defaults": {
+            "num_particles": 10_000,
+            "noise_reduction_factor": 1.0,
+            "max_min_mesh": 0.0,
+            "scale_of_points_grid": 0.0,
+        },
+        "cli": lambda args: {
+            "num_particles": args.num,
+            "noise_reduction_factor": 1.0,
             "seed": args.seed,
         },
     },
@@ -148,7 +180,7 @@ def main():
         seed = args.seed
         
         # Extract model-specific parameters for filename
-        if model_name == "koh":
+        if model_name == "koh" or model_name == "koh_optimized":
             lmax = model_cfg.get("lmax", args.koh_lmax)
             base_name = f"{model_name}_N{num}_L{lmax}_S{seed}_{timestamp}"
         elif model_name == "lattice":
