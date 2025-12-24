@@ -146,20 +146,29 @@ def _round_cpp(x: float) -> int:
 
 ###############################################################################
 # Alias-sampler helpers
+#For sampling from the Green's functions, we use Walker's alias method. This means we only ever need to do 2 uniform samples.
 ###############################################################################
 
 
 @dataclass
 class AliasTable:
-    fn: np.ndarray
-    an: np.ndarray
-    pn: np.ndarray
+    fn: np.ndarray #Alias probability table (the threshold)
+    an: np.ndarray #Alias index table (the index of the alternate outcome)
+    pn: np.ndarray #Probability table (we don't really need to store this)
 
     def to_typed(self) -> Tuple[np.ndarray, np.ndarray]:
         return self.fn.astype(np.float64), self.an.astype(np.int64)
 
 
 def _build_alias_table(probabilities: np.ndarray) -> AliasTable:
+    """
+    Constructs the lookup tables for Walker's Alias Method, enabling O(1) sampling 
+    from a discrete probability distribution.
+
+    This redistributes probability mass from "over-full" buckets to "under-full" 
+    buckets so that each slot in the table corresponds to exactly two possible 
+    outcomes: the index itself or its alias.
+    """
     pn = probabilities.astype(np.float64)
     n = pn.size
     tol = 1e-11
@@ -188,6 +197,12 @@ def _build_alias_table(probabilities: np.ndarray) -> AliasTable:
 
 @njit(cache=True, fastmath=True)
 def _alias_sample(fn: np.ndarray, an: np.ndarray) -> int:
+    """
+    Samples an index from the discrete distribution in O(1) constant time.
+
+    It selects a bucket uniformly at random, then uses a biased coin flip (based on 'fn') 
+    to decide whether to return the bucket index itself or its stored alias ('an').
+    """
     idx = np.random.randint(0, fn.shape[0])
     if np.random.random() > fn[idx]:
         idx = an[idx]
@@ -201,15 +216,22 @@ def _alias_sample(fn: np.ndarray, an: np.ndarray) -> int:
 
 @njit(cache=True, fastmath=True)
 def _fxy_series(x: int, y: int) -> float:
+    """
+    Calculates the Resistance Green's Function F(x, y) using its asymptotic 
+    series expansion. 
+    
+    Used for large distances (outside the pre-computed table) where the series 
+    converges to machine-precision accuracy.
+    """
     euler_gamma = 0.5772156649015329
     euler_gamma_plus_sqrt8 = 1.6169364357414509
     rsq = float(x * x + y * y)
     if rsq == 0.0:
         return 0.0
-    oor2 = 1.0 / rsq
-    oor4 = oor2 * oor2
-    oor6 = oor2 * oor4
-    oor8 = oor4 * oor4
+    oor2 = 1.0 / rsq #1/r^2
+    oor4 = oor2 * oor2 #1/r^4
+    oor6 = oor2 * oor4 #1/r^6
+    oor8 = oor4 * oor4 #1/r^8
 
     phi = math.atan2(float(y), float(x))
     cos4phi = math.cos(4.0 * phi)
@@ -236,6 +258,10 @@ def _fxy_series(x: int, y: int) -> float:
 
 @njit(cache=True, fastmath=True)
 def _fxy_lookup(table: np.ndarray, x: int, y: int) -> float:
+    """
+    Retrieves the Resistance Green's Function value F(x, y) from the pre-computed 
+    table, using symmetry to handle negative coordinates.
+    """
     x_abs = abs(x)
     y_abs = abs(y)
     if x_abs <= 60 and y_abs <= 60:
@@ -245,21 +271,36 @@ def _fxy_lookup(table: np.ndarray, x: int, y: int) -> float:
 
 @njit(cache=True, fastmath=True)
 def _pxy(table: np.ndarray, x: int, h: int) -> float:
+    """
+    Calculates the exact lattice probability (flux) of a walker starting at (0, h)
+    hitting the wall at (x, 0) using the Method of Images.    """
     return _fxy_lookup(table, x, 1 + h) - _fxy_lookup(table, x, 1 - h)
 
 
 @njit(cache=True, fastmath=True)
 def _qxy(x: int, h: int) -> float:
+    """
+    Calculates the continuum approximation (Cauchy distribution) for a walker 
+    starting at (0, h) hitting (x, 0), used as the envelope for rejection sampling.
+    """
     return (math.atan((x + 0.5) / h) - math.atan((x - 0.5) / h)) / math.pi
 
 
 @njit(cache=True, fastmath=True)
 def _walk_to_line_sample(table: np.ndarray, h: int) -> int:
+    """
+    Samples a random integer exit point on the line y=0 for a walker starting at (0, h) 
+    using Rejection Sampling.
+
+    It proposes candidates from the continuum Cauchy distribution (fast approximation) 
+    and accepts/rejects them based on the exact lattice flux (Method of Images) 
+    to ensure the resulting distribution is physically correct for the grid.
+    """
     p0 = _pxy(table, 0, h)
     q0 = _qxy(0, h)
     if p0 <= 0.0:
-        p0 = np.finfo(np.float64).eps
-    c = q0 / p0
+        p0 = np.finfo(np.float64).eps #Smallest positive floating point number
+    c = q0 / p0 #Acceptance ratio
     while True:
         x_raw = h * math.tan((np.random.random() - 0.5) * math.pi)
         if x_raw > RKILLING:
@@ -275,7 +316,7 @@ def _walk_to_line_sample(table: np.ndarray, h: int) -> int:
         q = _qxy(x_abs, h)
         if q <= 0.0:
             q = np.finfo(np.float64).eps
-        if np.random.random() < c * p / q:
+        if np.random.random() < c * p / q: #Accept or reject
             return x
 
 
@@ -286,6 +327,10 @@ def _walk_to_line_sample(table: np.ndarray, h: int) -> int:
 
 @njit(cache=True, fastmath=True)
 def _radius_to_level(r: int) -> int:
+    """
+    Maps a physical square radius 'r' to its corresponding index in the pre-computed 
+    probability tables. Returns -1 if the radius is not a supported power of 2.
+    """
     level = 0
     value = 1
     while value < r and level < LEVELS:
@@ -300,6 +345,10 @@ def _radius_to_level(r: int) -> int:
 def _walk_out_to_square_x(
     fn_tables: Sequence[np.ndarray], an_tables: Sequence[np.ndarray], r: int
 ) -> int:
+    """
+    Samples the exit coordinate 'x' along the top edge of a square of radius 'r' 
+    using the Walker's Alias Method for O(1) efficiency.
+    """
     level = _radius_to_level(r)
     if level < 0 or level >= len(fn_tables):
         return 0
@@ -311,6 +360,11 @@ def _walk_out_to_square_x(
 def _walk_out_to_square_displacement(
     fn_tables: Sequence[np.ndarray], an_tables: Sequence[np.ndarray], r: int
 ) -> Tuple[int, int]:
+    """
+    Generates a random 2D displacement vector for a walker exiting a square of radius 'r'.
+    It combines the sampled position from the top edge with a random 90-degree 
+    rotation (0, 90, 180, 270) to exploit the square's symmetry.
+    """
     x = _walk_out_to_square_x(fn_tables, an_tables, r)
     y = r
     orientation = np.random.randint(0, 4)
@@ -335,17 +389,29 @@ C_GAUSS = 1.9648389200167407
 
 @njit(cache=True, fastmath=True)
 def _f_kaiser(x: float) -> float:
+    """
+    Evaluates the Kaiser-Bessel window function (I0-based), which is the target 
+    probability distribution for the radial "fuzziness" needed to eliminate grid aliasing.
+    """
     return C_KAISER * _bessel_i0(BETA_KAISER * math.sqrt(max(0.0, 1.0 - x * x)))
 
 
 @njit(cache=True, fastmath=True)
 def _f_envelope(x: float) -> float:
+    """
+    Evaluates the Gaussian envelope function used to bound the Kaiser-Bessel 
+    distribution during Rejection Sampling.
+    """
     sigma_sq = SIGMA_GAUSS * SIGMA_GAUSS
     return C_GAUSS * math.exp(-(x * x) * (0.5 / sigma_sq))
 
 
 @njit(cache=True, fastmath=True)
 def _drand_kaiser() -> float:
+    """
+    Samples a random number from the Kaiser-Bessel distribution using Rejection Sampling 
+    (proposing from a Gaussian and accepting based on the ratio f_kaiser/f_envelope).
+    """
     while True:
         x = SIGMA_GAUSS * np.random.standard_normal()
         if abs(x) < 1.0 and np.random.random() < _f_kaiser(x) / _f_envelope(x):
@@ -357,6 +423,11 @@ def _drand_kaiser() -> float:
 def _pick_launch_point(
     r_inner: float, r_outer: float
 ) -> Tuple[np.int64, np.int64]:
+    """
+    Generates a starting coordinate (x, y) within a "fuzzy annulus" defined by 
+    r_inner and r_outer, using the Kaiser-Bessel radial distribution to prevent 
+    lattice aliasing artifacts.
+    """
     r = 0.5 * (r_inner + r_outer) + 0.5 * (r_outer - r_inner) * _drand_kaiser()
     phi = np.random.random() * 2 * math.pi
     x_rel = np.int64(_round_cpp(r * math.cos(phi)))
@@ -371,11 +442,10 @@ def _pick_launch_point(
 
 def _init_hierarchy_flat(lmax: int) -> Tuple[np.ndarray, np.ndarray]:
     """
-    Initialize flattened hierarchical bit-packed arrays.
-    Returns (flat_ss, ss_offsets) where:
-    - flat_ss: Single contiguous 1D uint8 array containing all grid levels
-    - ss_offsets: 1D int64 array where ss_offsets[l] is the starting index of level l
-    """
+    Allocates the memory for the hierarchical bit-pyramid.
+    Calculates the storage size for every zoom level (from 1x1 up to 2^L x 2^L) 
+    and returns a single flattened byte array plus an index of level offsets.
+     """
     total_bytes = 0
     offsets = []
     
@@ -397,9 +467,8 @@ def _init_hierarchy_flat(lmax: int) -> Tuple[np.ndarray, np.ndarray]:
 @njit(cache=True)
 def _getslxy_flat(flat_ss: np.ndarray, ss_offsets: np.ndarray, l: int, x: int, y: int) -> int:
     """
-    Get bit at position (x, y) from flattened bit-packed array.
-    For level l, grid size is 2^l.
-    Manual bounds checking is required since boundscheck=False in kernel.
+    Reads a single bit from the flattened array at level 'l' and coordinates (x, y).
+    Returns 1 if the site (or any of its sub-pixels in finer levels) is occupied, 0 otherwise.
     """
     size = 1 << l
     if x < 0 or x >= size or y < 0 or y >= size:
@@ -416,9 +485,7 @@ def _getslxy_flat(flat_ss: np.ndarray, ss_offsets: np.ndarray, l: int, x: int, y
 @njit(cache=True)
 def _setslxy_flat(flat_ss: np.ndarray, ss_offsets: np.ndarray, l: int, x: int, y: int) -> None:
     """
-    Set bit at position (x, y) in flattened bit-packed array.
-    For level l, grid size is 2^l.
-    Manual bounds checking is required since boundscheck=False in kernel.
+    Writes a '1' to a single bit in the flattened array, marking that location as occupied/sticky.
     """
     size = 1 << l
     if x < 0 or x >= size or y < 0 or y >= size:
@@ -434,6 +501,11 @@ def _setslxy_flat(flat_ss: np.ndarray, ss_offsets: np.ndarray, l: int, x: int, y
 
 @njit(cache=True)
 def _mark_flat(flat_ss: np.ndarray, ss_offsets: np.ndarray, lmax: int, x: int, y: int) -> None:
+    """
+    Propagates an occupancy mark up the entire hierarchy.
+    When a pixel is marked at the finest level, this function recursively marks 
+    the corresponding parent block in every coarser level to keep the 'zoom map' consistent.
+    """   
     for level in range(lmax - 1, -1, -1):
         _setslxy_flat(flat_ss, ss_offsets, level, x, y)
         x >>= 1
@@ -444,6 +516,10 @@ def _mark_flat(flat_ss: np.ndarray, ss_offsets: np.ndarray, lmax: int, x: int, y
 def _mark_with_pattern_flat(
     flat_ss: np.ndarray, ss_offsets: np.ndarray, lmax: int, x: int, y: int, pattern: np.ndarray
 ) -> None:
+    """
+    Applies the aggregation rule (e.g., 4-neighbor connectivity) by marking the 
+    center pixel and its neighbors as sticky throughout the entire hierarchy.
+    """
     _mark_flat(flat_ss, ss_offsets, lmax, x, y)
     for i in range(pattern.shape[0]):
         _mark_flat(flat_ss, ss_offsets, lmax, x + int(pattern[i, 0]), y + int(pattern[i, 1]))
@@ -464,6 +540,9 @@ def _diffuse_fixed_flat(
     fn_tables: Sequence[np.ndarray],
     an_tables: Sequence[np.ndarray],
 ) -> Tuple[int, int]:
+    """
+    Performs a single step of standard Brownian motion (radius=1).
+    """
     x_change, y_change = _walk_out_to_square_displacement(fn_tables, an_tables, 1)
     return x_cur + x_change, y_cur + y_change
 
@@ -478,10 +557,18 @@ def _diffuse_variable_flat(
     fn_tables: Sequence[np.ndarray],
     an_tables: Sequence[np.ndarray],
 ) -> Tuple[int, int]:
+    """
+    Performs an accelerated "variable" step by searching the hierarchy for empty space.
+
+    It iterates from the coarsest possible level (largest blocks) down to the finest,
+    checking the 3x3 neighborhood at each level. The first level found with 
+    empty neighbors determines the maximum safe jump size (radius), allowing the 
+    walker to skip large empty voids in a single O(1) operation.
+    """
     start_level = max(2, lmax - 9)
     block_size = 1
 
-    for l_block in range(start_level, lmax):
+    for l_block in range(start_level, lmax): #Zoom in until we reach a scale where the neighborhood is empty
         shift = lmax - l_block - 1
         if shift < 0:
             block_size = 1
@@ -521,6 +608,14 @@ def _return_towards_box(
     ymin_bound: int,
     ymax_bound: int,
 ) -> Tuple[int, int]:
+    """
+    Implements the "Walk-to-Line" acceleration for walkers outside the bounding box.
+
+    It identifies the closest face of the cluster's bounding box and "projects" the walker 
+    onto it in a single step. The lateral drift (how far it moves sideways during the 
+    approach) is sampled from the Green's function table. This allows walkers to cross 
+    vast empty distances instantly without simulating every step.
+    """
     overflowed = False
     x_target = x_cur
     y_target = y_cur
@@ -585,12 +680,28 @@ def run_simulation_kernel(
     np.ndarray,
     np.ndarray,
 ]:
+    """
+    The core computational loop for the DLA simulation.
+
+    Manages the lifecycle of N particles:
+    1.  **Initialization:** Places a seed at the center and marks its neighbors as sticky.
+    2.  **Launching:** Spawns new walkers on a bias-free Kaiser-Bessel annulus outside the cluster.
+    3.  **Walking:** Moves walkers using a hybrid algorithm:
+        -   **Walk-to-Line (WTL):** Teleports distant walkers back to the bounding box.
+        -   **Walk-to-Square (WTS):** Uses hierarchical skipping for walkers inside the box.
+    4.  **Aggregation:** Detects collisions via the hierarchical bit-map, freezes the 
+        particle, updates the bounding box, and marks new neighbors as sticky.
+
+    Returns:
+        Tuple containing final stats (mass, gyration radius, max radius, bounds) 
+        and arrays of all particle coordinates (x_coords, y_coords).
+    """
     # --- Setup Local Variables ---
     xmax_grid = 1 << (lmax - 1)
     ymax_grid = 1 << (lmax - 1)
     x_cen = xmax_grid // 2
     y_cen = ymax_grid // 2
-
+ # includes code for finding radius of gyration, which can be removed later if I choose to do post-hoc analysis
     m_total = 0
     x_total = 0.0
     y_total = 0.0
