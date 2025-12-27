@@ -128,9 +128,13 @@ def main():
 
     args = parser.parse_args()
 
-    # Create output directory
+    # Calculate seed range
+    first_seed = args.base_seed
+    last_seed = args.base_seed + args.count - 1
+    
+    # Create output directory with model name, cluster size, and seed range
     timestamp = utils.now_str()
-    batch_dir = Path("results") / "batches" / f"{args.name}_{timestamp}"
+    batch_dir = Path("results") / "batches" / f"{args.model}_N{args.N}_S{first_seed}-{last_seed}_{timestamp}"
     batch_dir.mkdir(parents=True, exist_ok=True)
 
     # Create manifest
@@ -162,7 +166,7 @@ def main():
     tasks = []
     for i in range(args.count):
         seed = args.base_seed + i
-        output_path = str(batch_dir / f"{i+1:03d}.npz")
+        output_path = str(batch_dir / f"{seed}.npz")
         tasks.append((args.model, args.N, seed, output_path))
 
     # Run simulations in parallel

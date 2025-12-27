@@ -36,7 +36,7 @@ def render_grid_numba(x_coords, y_coords, ages, grid, scale, pad_x, pad_y, radiu
     r_px = radius * scale
     
     # Optimization: if radius is less than 0.5 pixels, just set single pixel
-    if r_px < 0.5:
+    if r_px < 0.75:
         for i in prange(num_particles):
             px = int((x_coords[i] - pad_x) * scale)
             py = int((y_coords[i] - pad_y) * scale)
@@ -80,12 +80,13 @@ def render_grid_numba(x_coords, y_coords, ages, grid, scale, pad_x, pad_y, radiu
                             grid[py, px] = ages[i]
 
 
-def format_title(meta):
+def format_title(meta, num_particles=None):
     """
     Format a title string with important statistics from metadata.
     
     Args:
         meta: Dictionary containing model metadata
+        num_particles: Optional particle count to use (overrides metadata)
         
     Returns:
         Formatted title string
@@ -94,7 +95,11 @@ def format_title(meta):
         return None
     
     model = meta.get("model", "?")
-    num = meta.get("num", "?")
+    # Use provided count, or try metadata, or use "?"
+    if num_particles is not None:
+        num = num_particles
+    else:
+        num = meta.get("num", "?")
     seed = meta.get("seed")
     seed_str = str(seed) if seed is not None else "?"
     
@@ -351,7 +356,19 @@ def main():
     # Load cluster
     result = utils.load_cluster(args.file)
     meta = result.meta or {}
-    title = format_title(meta)
+    
+    # Calculate actual particle count from coordinates
+    try:
+        x, y = get_coordinates_from_result(result)
+        num_particles = len(x)
+    except (ValueError, AttributeError):
+        # Fallback: try to get count from metadata or positions
+        if result.positions is not None:
+            num_particles = len(result.positions)
+        else:
+            num_particles = None
+    
+    title = format_title(meta, num_particles=num_particles)
     
     # Render using unified rasterizer
     render(

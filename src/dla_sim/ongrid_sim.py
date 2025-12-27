@@ -907,22 +907,15 @@ class LatticeSimulator:
         
     def _calculate_auto_lmax(self, max_mass: int) -> int:
         """Estimates grid depth based on N using fractal dimension ~1.71."""
-        # 1. If user provided a manual size in config, use it.
         if self.config.lmax is not None:
             return self.config.lmax
 
-        # 2. Physics Formula: Radius ~ N^0.585
-        estimated_radius = 10.0 + 3.0 * (max_mass ** 0.585)
+        theoretical_radius = max_mass ** 0.585 # Radius ~ N^0.585
+        safe_radius = 1.5 * theoretical_radius + 50.0  # DLA arms are irregular. 1.5x theoretical radius covers the longest tips safely.    
         
-        # 3. Box Diameter = 2.5x Radius (includes buffer)
-        required_dim = int(2.5 * estimated_radius)
-        if required_dim < 16: required_dim = 16
-            
-        # 4. Convert to Power of 2 (lmax)
-        needed_lmax = int(np.ceil(np.log2(required_dim))) + 1
-        
-        # 5. Safety Clamp (Min 8, Max 20 to prevent RAM explosion)
-        return max(8, min(20, needed_lmax))
+        required_dim = int(2.2 * safe_radius) # Box Diameter
+        needed_lmax = int(np.ceil(np.log2(required_dim))) # Convert to Power of 2 (lmax)
+        return max(8, min(17, needed_lmax)) # Safety Clamp
 
     def reset_observables(self, max_mass: int) -> None:
         """Reset walker stats and allocate coordinate arrays."""
