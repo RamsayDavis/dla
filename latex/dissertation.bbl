@@ -56,8 +56,8 @@ Ilya Losev and Stanislav Smirnov.
 \newblock How long are the arms in {DBM}?, 2025.
 \newblock URL \url{https://arxiv.org/abs/2307.14931}.
 
-\bibitem[Grebenkov and Beliaev(2017)]{Grebenkov2017}
-Denis~S. Grebenkov and Dmitry Beliaev.
+\bibitem[Grebenkov and Belyaev(2017)]{Grebenkov2017}
+Denis~S. Grebenkov and Dmitry Belyaev.
 \newblock How anisotropy beats fractality in two-dimensional on-lattice diffusion-limited-aggregation growth.
 \newblock \emph{Phys. Rev. E}, 96:\penalty0 042159, Oct 2017.
 \newblock \doi{10.1103/PhysRevE.96.042159}.
@@ -190,15 +190,16 @@ David Williams.
 \newblock \emph{Probability with Martingales}.
 \newblock Cambridge University Press, Cambridge, 1991.
 
-\bibitem[Ahlfors(1979)]{Ahlfors1979}
-Lars~V. Ahlfors.
-\newblock \emph{Complex Analysis: An Introduction to the Theory of Analytic Functions of One Complex Variable}.
-\newblock McGraw-Hill, New York, 3rd edition, 1979.
-
 \bibitem[Herho et~al.(2026)Herho, Fajary, Anwar, Khadami, Trilaksono, Suwarman, and Irawan]{herho2026}
 Sandy H.~S. Herho, Faiz~R. Fajary, Iwan~P. Anwar, Faruq Khadami, Nurjanna~J. Trilaksono, Rusmawan Suwarman, and Dasapta~E. Irawan.
 \newblock Numba-accelerated 2d diffusion-limited aggregation: Implementation and fractal characterization, 2026.
 \newblock URL \url{https://arxiv.org/abs/2601.15440}.
+
+\bibitem[Cormen et~al.(2009)Cormen, Leiserson, Rivest, and Stein]{Cormen2009}
+Thomas~H. Cormen, Charles~E. Leiserson, Ronald~L. Rivest, and Clifford Stein.
+\newblock \emph{Introduction to Algorithms}.
+\newblock MIT Press, Cambridge, MA, 3rd edition, 2009.
+\newblock ISBN 978-0-262-03384-8.
 
 \bibitem[Abramowitz and Stegun(1965)]{Abramowitz1965}
 Milton Abramowitz and Irene~A. Stegun, editors.

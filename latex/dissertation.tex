@@ -36,7 +36,7 @@
 % --- Bibliography & Links ---
 \usepackage[numbers, sort&compress]{natbib} % Numbered citations [1-3]
 \usepackage[colorlinks=true, linkcolor=blue, citecolor=blue, urlcolor=blue]{hyperref} % Blue links, no boxes
-\usepackage[capitalize]{cleveref} % Smart referencing (load after hyperref)
+\usepackage[capitalize,noabbrev]{cleveref} % Smart referencing (load after hyperref)
 \usepackage{fancyhdr}
 
 % --- Aesthetic Setup ---
@@ -57,6 +57,20 @@
 \newtheorem{corollary}[theorem]{Corollary}
 \theoremstyle{remark}
 \newtheorem{remark}[theorem]{Remark}
+
+\usepackage{titlesec}
+
+% 1. Take control of the traditional two-line ("display") format
+\titleformat{\chapter}[display]{\normalfont\huge\bfseries}{\chaptertitlename\ \thechapter}{10pt}{\Huge}
+
+% 2. Drag the whole block up into the top margin
+\titlespacing*{\chapter}{0pt}{-40pt}{20pt}
+
+% 1. Force the chapter title onto a single line (the "hang" style)
+%\titleformat{\chapter}[hang]{\normalfont\huge\bfseries}{\thechapter.}{1em}{}
+
+% 2. NOW the spacing works: drag it up by 40pt, shrink the gap below to 20pt
+%\titlespacing*{\chapter}{0pt}{-30pt}{20pt}
 
 \begin{document}
 
@@ -353,7 +367,11 @@ This concludes the discrete formulation of the DLA process. The growth mechanism
 
 \section[Continuous Potential Theory]{Continuous Potential Theory}
 \label{sec:continuous_theory}
-We now provide an introduction to potential theory in the continuous setting. The fundamental shift is replacing the discrete random walk on a lattice with its continuous analogue: Brownian motion. Intuitively, at macroscopic scales, the discrete steps of a random walk blur into a continuous trajectory, meaning Brownian motion can be viewed as the continuous scaling limit of a random walk. Therefore, large clusters formed by random walks should exhibit the same macroscopic properties as those formed by Brownian particles.
+We now provide an introduction to potential theory in the continuous setting. The fundamental shift is replacing the discrete random walk on a lattice with its continuous analogue: Brownian motion. Intuitively, Brownian motion can be viewed as the continuous scaling limit of a random walk. 
+
+\begin{remark}
+    The transition from the discrete simple random walk to continuous Brownian motion is formally guaranteed by Donsker's Invariance Principle \cite[Theorem 5.22]{Morters2010}. A full exposition of this functional limit theorem falls outside the scope of this text, but the intuitive link is enough for our purposes.
+\end{remark}
 
 This section synthesises standard results regarding Brownian motion and potential theory, derived largely from M{\"o}rters and Peres \cite{Morters2010}, for the context of DLA. While fully rigorous proofs often require mathematics beyond the assumed knowledge of the intended audience, the fundamental theorems can be intuitively understood as the natural continuous extensions of the discrete framework established in the previous section.
 
@@ -378,7 +396,7 @@ In the study of 2D DLA, we will extensively utilise results from complex analysi
 A canonical complex Brownian motion $Z_t$ is a process taking values in $\mathbb{C}$, defined as $Z_t = X_t + iY_t$, where $X_t$ and $Y_t$ are two independent, standard one-dimensional Brownian motions.
 \end{definition}
 
-In the discrete setting, we saw that harmonic functions ($\mathcal{L}f = 0$) evaluated along a random walk form a martingale. The continuous analogue relies on the continuous Laplace operator, $\Delta = \sum_{i=1}^d \frac{\partial^2}{\partial x_i^2}$. A twice continuously differentiable function $u: D \to \mathbb{R}$ defined on a domain $D \subset \mathbb{R}^d$ is called \textbf{harmonic} if $\Delta u(x) = 0$ for all $x \in D$.
+In the discrete setting, we saw that harmonic functions ($\mathcal{L}f = 0$) evaluated along a random walk form a martingale. The continuous analogue relies on the continuous Laplace operator, $\Delta = \sum_{i=1}^d \frac{\partial^2}{\partial x_i^2}$. A twice continuously differentiable function $u: D \to \mathbb{R}$ defined on a domain $D \subset \mathbb{R}^d$ is called harmonic if $\Delta u(x) = 0$ for all $x \in D$.
 
 \begin{proposition}[Continuous Harmonic Functions are Martingales]
 \label{prop:continuous_martingale}
@@ -390,7 +408,7 @@ We utilise the fact that a Gaussian probability density function $\mathfrak{p}(t
 \begin{equation*}
     \frac{\partial \mathfrak{p}}{\partial t} = \frac{1}{2}\Delta \mathfrak{p}.
 \end{equation*}
-Because standard Brownian motion is normally distributed, its probability distribution evolves over time according to this exact equation. When calculating the expected value of a function $u(B_t)$ over time, this relationship links the time derivative of the expectation directly to the spatial Laplacian of the function. Since $u$ is harmonic, its Laplacian vanishes ($\Delta u = 0$). Consequently, the time derivative evaluates to zero, meaning the expected value is perfectly conserved.
+Because standard Brownian motion is normally distributed, its probability distribution evolves over time according to this exact equation. When calculating the expected value of a function $u(B_t)$ over time, this relationship links the time derivative of the expectation directly to the spatial Laplacian of the function. Since $u$ is harmonic, its Laplacian vanishes ($\Delta u = 0$). Consequently, the time derivative evaluates to zero, meaning the expected value is conserved.
 For a fully rigorous analytic proof, see M{\"o}rters and Peres \cite[Theorem 2.51 and Corollary 2.53]{Morters2010}, while for an equivalent proof utilising Itô's formula (the stochastic analogue of the chain rule), see \cite[Theorem 7.18]{Morters2010}.
 \end{proof}
 
@@ -423,7 +441,7 @@ for Borel sets $E \subset \partial D$, where $\tau_D = \inf\{t > 0 : B_t \notin 
 Similar to the discrete case, we define the harmonic measure from infinity by placing the starting point on a circle of radius $R$ enclosing the cluster, and taking the weak limit of the hitting distribution as $R \to \infty$.
 \end{remark}
 
-With this probability measure established, we can construct solutions to the continuous Dirichlet problem. Analytically, the Dirichlet problem seeks a function $u(x)$ that is harmonic within $D$ and matches a specified continuous boundary condition $g(x)$ on $\partial D$. The probabilistic solution to this system mirrors the discrete Optional Stopping Theorem proof seen in \Cref{thm:dirichlet_sol}.
+With this probability measure established, we can construct solutions to the continuous Dirichlet problem. Analytically, the Dirichlet problem seeks a function $u(x)$ that is harmonic within $D$ and matches a specified continuous boundary condition $g(x)$ on $\partial D$. The probabilistic solution to this system mirrors the discrete Optional Stopping Theorem proof seen in \cref{thm:dirichlet_sol}.
 
 \begin{theorem}[Solution of the Continuous Dirichlet Problem]
     \label{the:dirichlet_solution}
@@ -598,16 +616,15 @@ The mathematical definition of DLA requires particles to originate at infinity. 
 In the continuous setting, initialising at infinity is equivalent to initialising uniformly on a bounding circle.
 To see this, let $R_{max}$ be the radius of the smallest circle centred at the origin containing the cluster. We define a launching circle of radius $R_{l} > R_{max}$.
 
-Consider the conformal map $\phi(z) = \frac{R_{l}}{z}$. This creates a bijection between the exterior of the launching circle and the interior of the unit disk $\mathbb{D}$, mapping infinity directly to the origin. As established by evaluating the disk's Poisson kernel at the origin (\Cref{the:disk_kernel} with $z=0$), the harmonic measure is perfectly uniform. Consequently, the hitting distribution of a Brownian motion starting at infinity on the circle $|z|=R_{l}$ is also uniform.
+Consider the conformal map $\phi(z) = \frac{R_{l}}{z}$. This creates a bijection between the exterior of the launching circle and the interior of the unit disk $\mathbb{D}$, mapping infinity directly to the origin. As established by evaluating the disk's Poisson kernel at the origin (\cref{the:disk_kernel} with $z=0$), the harmonic measure is uniform. Consequently, the hitting distribution of a Brownian motion starting at infinity on the circle $|z|=R_{l}$ is also uniform.
 Thus, our Off-Lattice algorithm simply samples a starting angle $\theta \sim U[0, 2\pi)$ and initialises the walker at $z_0 = R_{l}e^{i\theta}$. 
-Analytically, this procedure is strictly equivalent to initialising the random walk at infinity.
 
 Note also that provided the circle contains the entire cluster there is no size restriction, so we can scale it dynamically, thereby improving the efficiency of the simulation.
 
 \subsection{On-Lattice: The Fuzzy Annulus}
-However in the discrete setting, the above approach introduces a bias. As detailed by \citet{Loh2014}, projecting a circle onto a discrete grid forces the starting positions to snap to the nearest integer coordinates. This creates a `lattice aliasing' effect (also referred to as a Moir\'e interference pattern). For large enough clusters, this bias is sufficient to distort key metrics including the fractal dimension.
+However in the discrete setting, the above approach introduces a bias. As detailed in \cite{Loh2014}, projecting a circle onto a discrete grid forces the starting positions to snap to the nearest integer coordinates. This creates a `lattice aliasing' effect (also referred to as a Moir\'e interference pattern). For large enough clusters, this bias is sufficient to distort key metrics including the fractal dimension.
 
-To eliminate this, we implement Loh's Fuzzy Annulus method. Instead of a fixed radius $R$, the starting position is sampled from a probability distribution spread over an annulus (donut shape). This probability distribution utilises the Kaiser-Bessel function $I_0$, which originates from signal processing \cite{kaiser1980}:
+To eliminate this, we implement Loh's Fuzzy Annulus method. Instead of a fixed radius $R$, the starting position is sampled from a probability distribution spread over an annulus. This probability distribution utilises the Kaiser-Bessel function $I_0$, which originates from signal processing \cite{kaiser1980}:
 \begin{equation*}
     P(x) \propto \frac{I_0(x)}{I_0(R_{l})}.
 \end{equation*}
@@ -621,7 +638,7 @@ Rather than directly sampling from this distribution, we use an optimisation tec
 
 \section{Far-Field Diffusion}
 \label{sec:far_field}
-Once initialised, or indeed at any point during the diffusion, the walker may be far from the cluster. To improve the efficiency of our algorithms, we utilise the properties of harmonic functions to quickly return the walker to near the cluster.
+Once initialised, or indeed at any point during the diffusion, the walker may be far from the cluster. To improve the efficiency of our algorithms, we utilise results from \cref{ch:theory} to quickly return the walker to near the cluster.
 
 \subsection{Off-Lattice: Re-injection from Infinity}
 In the continuous case, if the walker strays outside the launching circle ($|z_{out}| > R_l$), we exploit the conformal invariance established in \cref{sec:continuous_theory} to immediately map it back to this boundary.
@@ -633,9 +650,9 @@ In this instance, we map the uniform exit distribution on the unit circle to the
  \begin{enumerate}
     \item Normalisation: We normalise the walker's position $z$ to $r = |z|/R_l$ and map it to the interior point $a = 1/r$ via inversion. Note that $r$ and $a$ are real numbers.
     \item Möbius Transformation: We generate a uniform variate $\zeta$ on the unit circle (representing an isotropic exit from the origin). We then apply the real-axis Möbius map:
-    \begin{equation}
+    \begin{equation*}
         w = \frac{r\zeta + 1}{r + \zeta}.
-    \end{equation}
+    \end{equation*}
     This maps the unit circle to itself, sending the origin to the point $a$ inside the disk. By the conformal invariance of harmonic measure, the transformed variate $w$ is now distributed according to the harmonic measure relative to $a$.
     \item Reconstruction: Inverting now does not change the distribution on the unit circle, so $w$ is distributed exactly according to the exterior harmonic measure. We rotate $w$ by $\arg(z_{out})$ and scale by $R_l$ to obtain the true re-entry position.
 \end{enumerate}
@@ -687,7 +704,7 @@ Although 2D random walks are recurrent, a particle returning from such an extrem
 As the walker approaches the cluster, the step size must decrease to avoid overshooting the boundary. 
 
 \subsection{Off-Lattice: Walk-to-Circle}
-At each step, we calculate the shortest Euclidean distance to the cluster, $d_{min}$. Details of this calculation are included in \cref{app:spatial_indexing}. We can construct a circle $C$ of radius $r = d_{min} - \epsilon$ (where $\epsilon$ is a small tolerance). Since the interior of $C$ is empty, the potential is harmonic.
+At each step, we calculate the shortest Euclidean distance to the cluster, $d_{min}$. Details of this calculation are included in \cref{app:spatial_indexing}. We can construct a circle $C$ of radius $r = d_{min} - \epsilon$ (where $\epsilon$ is a small tolerance, set to $2$ in our simulation). Since the interior of $C$ is empty, the potential is harmonic.
 By the isotropy of Brownian motion (\cref{the:disk_kernel} with $z=0$), the exit distribution is uniform. We therefore advance the walker (at position $z$) to a random point on the boundary of $C$:
 \begin{equation*}
     z_{new} = z + r e^{i\theta}, \quad \theta \sim U[0, 2\pi).
@@ -889,7 +906,7 @@ The aggregation condition on $\mathbb{Z}^2$ is straightforward. We define the bo
 
 In the continuous model, aggregation occurs when the walker touches a cluster particle (i.e., the center-to-center distance is 2, since the radius of each particle is 1). Simulating this directly with fixed time-steps is not ideal, due to the potential errors of the walker grazing the cluster or overshooting. 
 
-To resolve this, we adopt the analytic method described by \citet{Bell2019}.
+To resolve this, we adopt the analytic method proposed in \cite{Bell2019}.
 When the walker is at position $p$, close to a target particle centred at $q$ but constrained by a second-nearest neighbour $q_2$ at distance $a$, we define a local domain $\Omega$. As illustrated in \cref{fig:conformal_collision} (Stage 1), $\Omega$ is the lune (crescent-shape) formed by the intersection of the safe escape circle (radius $a-2$, centred at $p$) and the exterior of the capture circle (radius $2$, centred at $q$).
 
 To sample the exact exit position from $\Omega$ without time-stepping errors, we conformally map this lune to the upper half-plane $\mathbb{H}$ in three stages:
@@ -926,9 +943,9 @@ We hypothesise that the characteristic cross-shape of Lattice DLA arises primari
 The critical design choice is the microscopic aggregation mechanism. We primarily evaluated two geometric strategies:
 
 \begin{enumerate}
-    \item \textbf{The Sticky Boundary:} A walker aggregates if it enters any square cell within a predefined boundary. We rejected this because the square capture zone imposes lattice anisotropy onto the incoming probability flux \textit{before} aggregation occurs, preventing a clean separation of transport and packing effects.
+    \item \textbf{The Sticky Boundary:} A walker aggregates if it enters any square cell within a predefined boundary. We rejected this because the square capture zone imposes lattice anisotropy onto the incoming probability flux before aggregation occurs, preventing a clean separation of transport and packing effects.
     
-    \item \textbf{The Twist Method (Chosen):} The walker behaves exactly as a hard sphere in continuous space. Upon exact analytical collision with the cluster, the particle's continuous angle of impact is projected to the nearest valid lattice site, and the particle is rigidly snapped into place. By isolating the discrete packing to the exact instant of impact, the arrival statistics are entirely dependent on the continuous harmonic measure.
+    \item \textbf{The Twist Method (Chosen):} The walker behaves exactly as a hard sphere in continuous space. Upon exact analytical collision with the cluster, the particle's continuous angle of impact is projected to the nearest valid lattice site, and the particle is snapped into place. By isolating the discrete packing to the exact instant of impact, the arrival statistics are entirely dependent on the continuous harmonic measure.
 \end{enumerate}
 
 We note a conceptual similarity to the `antenna method' explored by \citet{Menshutin2011}. However, their study postulated that shifting a continuous walker to a predefined axial antenna upon contact is functionally identical to a pure square-lattice model, without providing direct comparative evidence. Consequently, our subsequent quantitative comparison of these transport models provides a novel empirical contribution. Furthermore, strict algorithmic equivalence cannot be assumed, as the exact conformal adhesion technique utilised in our model had not yet been developed at the time of their publication.
@@ -984,7 +1001,7 @@ The algorithm proceeds identically to the Off-Lattice simulation until the colli
     \caption{The angular window for hybrid aggregation. If a walker $P$ collides with particle $Q$ within the angle $|\phi| < \pi/4$ (shaded region), it is snapped to the nearest lattice slot $N$. We can assume $N$ is empty because if it were occupied, its own collision shell would have intercepted the walker before it could reach $Q$ within this specific angle.}
     \label{fig:snapping_window}
 \end{figure}
-When a collision occurs, the continuous impact vector relative to the target particle is $\Delta z = \Delta x + i\Delta y$. We then determine the nearest cardinal lattice direction simply by comparing the absolute Cartesian components. For instance, the primary candidate is defined as the horizontal neighbour if $|\Delta x| > |\Delta y|$. The particle is then rigidly snapped to this adjacent lattice coordinate.
+When a collision occurs, the position of the walker relative to the target particle is $\Delta z = \Delta x + i\Delta y$. We then determine the nearest cardinal lattice direction simply by comparing the absolute Cartesian components. For instance, the primary candidate is defined as the horizontal neighbour if $|\Delta x| > |\Delta y|$. The particle is then snapped to this adjacent lattice coordinate.
 
 A potential concern is whether the snapped lattice site is available. We provide a simple geometric argument to justify that the target slot is always empty.
 
@@ -1008,13 +1025,13 @@ This implies that if $N$ were occupied, the walker would have intersected $N$'s 
 \chapter{Simulation Results}
 \label{ch:results}
 
-The complete implementation of the algorithms described in \cref{ch:algorithms}, along with the rest of the codebase for this project, is available at: \url{https://github.com/RamsayDavis/dla}.
+The complete implementation of the algorithms described in \cref{ch:algorithms}, along with the rest of the codebase for this project, is available at: \url{https://github.com/anonmathstudent/partb_dla}. We implemented a Python/Numba framework combining the accelerated lattice, off-lattice, and hybrid DLA algorithms studied in this dissertation.
 
-Using this code, we generated $1,000$ clusters of size $N=10^6$ particles and $100$ clusters of size $N=10^7$ particles for each of the three models (Off-Lattice, Lattice, Hybrid). We then stored the results as standardised 2D coordinate arrays in compressed NumPy files (\texttt{.npz} format).
+Using this code, we generated $1,000$ clusters of size $N=10^6$ particles and $100$ clusters of size $N=10^7$ particles for each of the three models (Off-Lattice, Lattice, Hybrid), each with an independent seed. We then stored the results as standardised 2D coordinate arrays in compressed NumPy files (\texttt{.npz} format).
 
 In the subsequent chapter, we will perform a more rigorous analysis, designed to expand the results of \cite{Grebenkov2017} and compare across the three models. Before that, we first visualise the clusters to gain an intuitive understanding of the structural similarities and differences.
 
-\Cref{fig:heatmap_comparison} and \Cref{fig:density_comparison} present a visual comparison of the clusters generated by the three models, with the former providing a visualisation of some randomly chosen clusters of size $N=10^7$, and the latter showing the spatial density maps of the entire ensemble of clusters at both $N=10^6$ and $N=10^7$ scales.
+\cref{fig:heatmap_comparison} and \cref{fig:density_comparison} present a visual comparison of the clusters generated by the three models, with the former providing a visualisation of some randomly chosen clusters of size $N=10^7$, and the latter showing the spatial density maps of the entire ensemble of clusters at both $N=10^6$ and $N=10^7$ scales.
 
 \begin{figure}[htbp]
   \centering
@@ -1026,11 +1043,11 @@ In the subsequent chapter, we will perform a more rigorous analysis, designed to
 \begin{figure}[htbp]
   \centering
     \includegraphics[width=\textwidth]{images/density_maps_combined.pdf}
-  \caption{Spatial density maps of the simulated models at $10^6$ and $10^7$ scales. Unlike the single-cluster heatmaps, these visualisations aggregate the entire ensemble of simulated clusters into a unified 2D spatial histogram. The logarithmic colour intensity represents the cumulative frequency of particles occupying each spatial bin. Overlay contours denote the maximum absolute radial extent (dashed cyan) and the average radial mass distribution (solid white), also known as the radius of gyration $R_g$. }
+  \caption{Spatial density maps of the simulated models at $10^6$ and $10^7$ scales. Unlike the single-cluster heatmaps, these visualisations aggregate the entire ensemble of simulated clusters into a unified 2D spatial histogram. The logarithmic colour intensity represents the cumulative frequency of particles occupying each spatial bin. Overlay contours denote the maximum absolute radial extent (dashed cyan) and the average radial mass distribution (solid white), also known as the angular radius of gyration $R_g$. }
   \label{fig:density_comparison}
 \end{figure}
 
-There are some immediate observations that can be made from these visualisations, with the key one being the apparent similar cross-like structure between the Lattice and Hybrid models, while the Off-Lattice model appears much more uniform, resulting in near circular density maps in \Cref{fig:density_comparison}. The remainder of this thesis will focus largely on expanding upon this observation.
+There are some immediate observations that can be made from these visualisations, with the key one being the similar cross-like structure between the Lattice and Hybrid models, while the Off-Lattice model appears much more uniform, resulting in near circular density maps in \cref{fig:density_comparison}. The remainder of this thesis will focus largely on expanding upon this observation.
 
 
 % =========================================
@@ -1047,9 +1064,9 @@ While DLA has been studied for over forty years, finding an exact mathematical p
 Before analysing our results, we must first establish what is meant by `dimension'. 
 Dimension is a property that describes how an object fills space as it scales. For standard Euclidean geometries, this scaling relationship is an integer. For instance, scaling a solid 2D shape by a factor of 2 increases its area by $2^2 = 4$. However, for fractal objects, this scaling relationship does not resolve to an integer; scaling the fractal up by a factor of 2 increases its mass by $2^D$, where $D$ is a non-integer known as the fractal dimension. 
 
-For an in-depth explanation of how we formalise this notion, see \citet{Falconer1990}. Here, we provide a brief motivation and definition of the two metrics relevant for our purposes: box-counting dimension and growth rate.
+For an in-depth explanation of how we formalise this notion, see \cite{Falconer1990}. Here, we provide a brief motivation and definition of the two metrics relevant for our purposes: box-counting dimension and growth rate.
 \subsection{Box-Counting Dimension (\texorpdfstring{$D_{box}$}{D\_box})}
-We first define the Box-Counting (or Minkowski) dimension. We motivate the definition by considering the power law of scaling. 
+We first define the box-counting (or Minkowski) dimension. We motivate the definition by considering the power law of scaling. 
 
 Consider covering a standard Euclidean object with a uniform grid of boxes of side length $\epsilon$. If the object is a 1D line of length $L$, the number of boxes required is $N(\epsilon) \propto L/\epsilon \sim \epsilon^{-1}$. If the object is a 2D square of area $A$, the number of boxes is $N(\epsilon) \propto A/\epsilon^2 \sim \epsilon^{-2}$. This fits our intuition for dimension for simple objects. We generalise this scaling relationship for an object of arbitrary dimension $D_{box}$ as:
 \begin{equation*}
@@ -1060,10 +1077,10 @@ To isolate the dimension $D_{box}$, we take the logarithm of both sides and rear
 \begin{equation*}
     D_{box} \approx \frac{\log N_{\epsilon}(F) - c}{-\log \epsilon}
 \end{equation*}
-As ($\epsilon \to 0$), the constant $c$ becomes negligible, resulting in the following definition:
+where $c$ is a constant of proportionality. As ($\epsilon \to 0$), $c$ becomes negligible, resulting in the following definition:
 
 \begin{definition}[Box-Counting Dimension]
-Let $N_{\epsilon}(F)$ be the smallest number of $\epsilon$-mesh cubes (boxes of side length $\epsilon$) that intersect a set $F$. The Box-Counting dimension $D_{box}$ is defined as:
+Let $N_{\epsilon}(F)$ be the smallest number of $\epsilon$-mesh cubes (boxes of side length $\epsilon$) that intersect a set $F$. The box-counting dimension $D_{box}$ is defined as:
 \begin{equation*}
     D_{box} = \lim_{\epsilon \to 0} \frac{\log N_{\epsilon}(F)}{-\log \epsilon}
 \end{equation*}
@@ -1074,7 +1091,7 @@ Practically, by measuring the number of occupied boxes $N_{\epsilon}(F)$ for var
 
 \subsection{Growth Rate}
 
-Much of the literature on DLA uses a different metric for dimension, related to the growth rate of the cluster. The widely reported fractal dimension of $D \approx 1.71$ (e.g. \cite{ossadnik1991} and \cite{menshutin2006}) is a result of this definition, which we now introduce, before discussing its relationship to the Box-Counting dimension.
+Much of the literature on DLA uses a different metric for dimension, related to the growth rate of the cluster. The widely reported fractal dimension of $D \approx 1.71$ (e.g. \cite{ossadnik1991} and \cite{menshutin2006}) is a result of this definition, which we now introduce, before discussing its relationship to the box-counting dimension.
 
 We first follow \cite{Grebenkov2017} in considering a more robust metric than the maximal radius to represent the spatial extent of a cluster: the radius of gyration, $R_g$, using their definition. 
 
@@ -1085,7 +1102,7 @@ For a discrete aggregate of $N$ identical particles located at positions $\mathb
 \end{equation*}
 \end{definition}
 
-Similar to the Box-Counting dimension, there is a power law relationship between the radius of gyration and the number of particles in the cluster:
+Similar to the box-counting dimension, there is a power law relationship between the radius of gyration and the number of particles in the cluster:
 \begin{equation*}
     R_g \sim N^\beta
 \end{equation*}
@@ -1093,7 +1110,7 @@ where $\beta$ is defined as the growth rate exponent.
 
 Compare this now to the power law satisfied by the box counting dimension for a cluster of $N$ particles $R \sim N^{1/D_{box}}$. Equating them suggests another definition of dimension based on the growth rate, given by $D_\beta = \frac{1}{\beta}$.
 
-This is the metric that is commonly used in the DLA literature to represent the fractal dimension of the cluster, and is often assumed to be equivalent to the Box-Counting dimension. However, this is not always the case, as the following simple example from \cite{Grebenkov2017} illustrates:
+This is the metric that is commonly used in the DLA literature to represent the fractal dimension of the cluster, and is often assumed to be equivalent to the box-counting dimension. However, this is not always the case, as the following simple example from \cite{Grebenkov2017} illustrates:
 
 Consider an aggregate composed of $2t$ particles. Half of these particles ($t$) form a dense 2D disk of radius $R_{disk} \propto \sqrt{t}$. The other half ($t$) form a 1D interval (a line) of length $L \propto t$.
 The box dimension $D_{box}$ is determined by the solid 2D disk, as it is the densest component, hence $D_{box} = 2$. However, the radius scales as $R \propto t$, and since the total mass is $N = 2t \propto t$, the radius scales linearly with the mass ($R \propto N^1$). This means that the growth rate is $\beta = 1$, yielding a Growth Rate Dimension of $D_\beta = 1$.
@@ -1103,19 +1120,19 @@ Therefore we may need to be more careful in interchanging between these two metr
 % 5.2 Methodology
 \section{Methodology}
 \label{sec:dim_method}
-To compute both $D_{box}$ and $D_\beta$, we rely on performing linear regression on log-log relationships. How this line is fit, and the potential error here, is not widely covered in the literature, which largely uses standard Ordinary Least Squares (L2) regression.
+To compute both $D_{box}$ and $D_\beta$, we rely on performing linear regression on log-log relationships. How this line is fit, and the potential error here, is not widely covered in the literature, which largely uses standard Ordinary Least Squares ($L^2$) regression.
 
-We provide a novel comparison of the standard L2 regression with a more robust alternative, the Theil-Sen estimator. The Theil-Sen estimator calculates the median of all pairwise slopes between data points, making it resistant to outliers and boundary effects that can skew L2 regression. As well as providing insight into the effect of the choice of regression method on the resulting dimension (for both dimension metrics), it also served to identify the valid scaling regime for $D_{box}$.
+We provide a novel comparison of the standard $L^2$ regression with a more robust alternative, the Theil-Sen estimator. The Theil-Sen estimator calculates the median of all pairwise slopes between data points, making it resistant to outliers and boundary effects that can skew $L^2$ regression. As well as providing insight into the effect of the choice of regression method on the resulting dimension (for both dimension metrics), it also served to identify the valid scaling regime for $D_{box}$.
 
 \subsection{Box Sizes for Box-Counting Dimension}
-When we fit the grids with box sizes comparable to the particle size (i.e., $\epsilon < 16$ pixels), the box-count is dominated by the local 1D topology of individual branches, and eventually saturates at the trivial 0D limit of counting individual particles. Similarly, as the boxes get large ($\epsilon > R/16$ pixels, where $R$ is the cluster radius), the count is dominated by finite-size effects, and eventually saturates at the 0D limit of counting the entire cluster as one box. In both cases, the slope is pulled down, which skews the calculated dimension when using L2. 
+When we fit the grids with box sizes comparable to the particle size (i.e., $\epsilon < 16$ pixels), the box-count is dominated by the local 1D topology of individual branches, and eventually saturates at the trivial 0D limit of counting individual particles. Similarly, as the boxes get large ($\epsilon > R/16$ pixels, where $R$ is the cluster radius), the count is dominated by finite-size effects, and eventually saturates at the 0D limit of counting the entire cluster as one box. In both cases, the slope is pulled down, which skews the calculated dimension when using $L^2$. 
 By comparing to the outlier-resistant Theil-Sen estimator,  we were able to ascertain what appears to be a more robust scaling regime for the box dimension, which is $\epsilon \in [16, R/16]$ pixels. 
 Restricting the sequence of up to 30 unique logarithmic intervals to this domain yields a statistically stable dimension metric, as demonstrated for a representative cluster in \cref{fig:box_regression_robustness}.
 
 \begin{figure}[htbp]
   \centering
   \includegraphics[width=0.9\textwidth]{images/box_regression_robustness.pdf}
-  \caption{Comparison of Ordinary Least Squares (L2) and Theil-Sen (TS) regressions for extracting the Box-Counting dimension of a single DLA cluster. To directly yield the fractal dimension $D_0$ as a positive gradient, the data is plotted as $\log N(\epsilon)$ against $\log(1/\epsilon)$. The annotated metric $\Delta D = |D_{L2} - D_{TS}|$ quantifies the discrepancy between the two statistical estimators. Including boxes that are too small or large relative to the cluster can have significant effects on the resulting dimension statistic.}
+  \caption{Comparison of Ordinary Least Squares ($L^2$) and Theil-Sen (TS) regressions for extracting the box-counting dimension of a single DLA cluster. To directly yield the fractal dimension $D_0$ as a positive gradient, the data is plotted as $\log N(\epsilon)$ against $\log(1/\epsilon)$. The annotated metric $\Delta D = |D_{L2} - D_{TS}|$ quantifies the discrepancy between the two statistical estimators. Including boxes that are too small or large relative to the cluster can have significant effects on the resulting dimension statistic.}
   \label{fig:box_regression_robustness}
 \end{figure}
 
@@ -1124,7 +1141,7 @@ As seen in \cref{fig:box_regression_robustness}, upon adjusting the scaling, the
 
 When fitting the growth rate, we again had to adjust the start points, and the frequency of sampling, to ensure a robust fit. Again the Theil-Sen estimator was used as a point of comparison. After heuristic analysis we settled on a start point at N=1000 particles, which is large enough to avoid initial finite-size effects in the growth regime, and sampled 50 samples every power of 10. 
 
-From here on we use L2 regression, having satisfied ourselves with the robustness of the slopes at the chosen scales.
+From here on we use $L^2$ regression, having satisfied ourselves with the robustness of the slopes at the chosen scales.
 \begin{remark}
     Interestingly, when sampling evenly on a linear scale rather than logarithmic (biasing the fit towards the later stages of growth), this causes a more dramatic change in the resulting growth rate and corresponding dimension metric in the Lattice and Hybrid models. This aligns with our later discussion on anisotropy. 
 \end{remark}
@@ -1153,9 +1170,10 @@ From here on we use L2 regression, having satisfied ourselves with the robustnes
     \end{tabular}
 \end{table}
 
-The final results for both dimension metrics across the different models and cluster sizes are summarised in \Cref{tab:dim_results}. We report the ensemble averages alongside the sample standard deviation ($\sigma$). Because this inter-cluster variation captures the macroscopic structural stochasticity inherent to the DLA process, and notably dominates the regression error for the growth dimension, we utilise $\sigma$ as our primary measure of macroscopic uncertainty throughout the remainder of this analysis.
+The final results for both dimension metrics across the different models and cluster sizes are summarised in \cref{tab:dim_results}. We report the ensemble averages alongside the sample standard deviation ($\sigma$). In line with the DLA literature (e.g. \cite{Grebenkov2017}), $\sigma$ is utilised as a direct, descriptive proxy for statistical uncertainty. This approach serves to capture the macroscopic inter-cluster variability inherent to the stochastic growth process.  
+Notably, the inter-cluster variance for the box dimension is narrower than for the growth dimension. It would therefore appear to be a more stable metric, and less sensitive to the stochasticity of the cluster growing process at these scales.
 
-Our recorded values for the kinetic growth dimension ($D_\beta$) closely align with the established literature. For the Off-Lattice model, our asymptotic result of $1.714 \pm 0.013$ perfectly matches the universally accepted consensus of $D \approx 1.71$ \cite{ossadnik1991}. Similarly, our Lattice model result of $1.682 \pm 0.016$ at $10^7$ particles aligns closely with Grebenkov and Belyaev's result of $1.678 \pm 0.011$, which was derived from slightly larger clusters of $\sim 5 \times 10^7$ particles \cite{Grebenkov2017}. 
+Our recorded values for the kinetic growth dimension ($D_\beta$) closely align with the established literature. For the Off-Lattice model, our asymptotic result of $1.714 \pm 0.013$ matches the universally accepted consensus of $D \approx 1.71$ \cite{ossadnik1991}. Similarly, our Lattice model result of $1.682 \pm 0.016$ at $10^7$ particles aligns closely with Grebenkov and Belyaev's result of $1.678 \pm 0.011$, which was derived from slightly larger clusters of $\sim 5 \times 10^7$ particles \cite{Grebenkov2017}. While those authors also reported a lower box-counting dimension of $1.666 \pm 0.004$, we attribute this discrepancy to the more restricted scaling regime applied to our analysis, justified in \cref{sec:dim_method}.
 
 For our Hybrid model, we benchmark against the similar 4-antennae model presented by Menshutin \cite{Menshutin2011}, where their proposed logarithmic scaling relationship predicts dimension values of $1.694$ and $1.653$ for clusters of size $10^6$ and $10^7$ respectively. While our results follow a similar downward trajectory, direct quantitative comparisons must be treated with caution; as discussed in Chapter 3, we cannot be sure of algorithmic equivalence, and the methodologies used to compute the fractal dimensions also vary.
 
@@ -1174,15 +1192,16 @@ To visualise these macroscopic statistics, \cref{fig:dim_histograms_combined} pr
 \section{Comparing Box-Dimension and Growth Rate}
 \label{sec:dim_evolution}
 
-There is a small amount of literature that compares the box-counting dimension ($D_{box}$) of DLA to the proxy derived from the growth rate ($D_{\beta}$). \citet{Grebenkov2017} noted that for a sample of 100 lattice clusters of size $\approx 5 \times 10^7$ particles, the two statistics differ by under 1\%. Other literature focusing on the box dimension includes \cite{Hanan2001}, but they work with lattice clusters of size order $10^4$ particles, which are susceptible to finite-size effects. We found little evidence of full-cluster box-counting applied to massive off-lattice aggregates, though implementations of the sandbox method (a distinct but related spatial scaling technique) on $10^6$ particle Off-Lattice clusters estimate the dimension to be heavily depressed at $D \approx 1.685$ \cite{Hanan2012}.
+There is a small amount of literature that compares the box-counting dimension ($D_{box}$) of DLA to the proxy derived from the growth rate ($D_{\beta}$). \cite{Grebenkov2017} noted that for a sample of 100 lattice clusters of size $\approx 5 \times 10^7$ particles, the two statistics differ by under 1\%. Other literature focusing on the box dimension includes \cite{Hanan2001}, but they work with lattice clusters of size order $10^4$ particles, which are susceptible to finite-size effects. We found little evidence of full-cluster box-counting applied to massive off-lattice aggregates, though implementations of the sandbox method (a distinct but related spatial scaling technique) on $10^6$ particle Off-Lattice clusters estimate the dimension to be heavily depressed at $D \approx 1.685$ \cite{Hanan2012}.
 
-Our asymptotic dimension measurements at $N=10^7$ particles, summarised in Table \ref{tab:dim_results}, reveal two distinct dimensional behaviors across the simulation spaces:
+Our asymptotic dimension measurements at $N=10^7$ particles, summarised in \cref{tab:dim_results}, reveal two distinct dimensional behaviors across the simulation spaces:
 
-First, across all models and scales there is a noticeable depression in the box-counting dimension ($D_{box} \approx 1.68$) relative to the classical theoretical value of $1.71$. This suppression is likely an artefact of evaluating the static bulk of the finite clusters. The growth rate dimension ($D_{\beta}$) is likely more influenced by the active outer region of the cluster, while the box-counting dimension averages over the entire structure. This aligns with the results of \cite{Hanan2001}, where they performed box-counting on both the entirety and just the outer perimeter of the cluster, and found that the box dimension of the perimeter was much closer to the theoretical value of $1.71$. Admittedly their analysis was over much smaller clusters, so there is a greater possibility of finite-size effects affecting their results, and confirming this result on large clusters would be an area for further investigation.
+First, across all models and scales there is a noticeable depression in the box-counting dimension ($D_{box} \approx 1.68$) relative to the classical theoretical value of $1.71$. 
+One hypothesis is that this suppression is a finite-size artefact caused by evaluating the static bulk of the clusters. The growth dimension ($D_{\beta}$) is likely more influenced by the active outer region of the cluster, while the box-counting dimension averages over the entire structure. This aligns with the results of \cite{Hanan2001}, where they performed box-counting on both the entirety and just the outer perimeter of the cluster, and found that the box dimension of the perimeter was much closer to the theoretical value of $1.71$. However, they performed this analysis over smaller clusters ($N \approx 5 \times 10^4$). When we performed a similar analysis on a single Lattice cluster ($N = 10^7$), we found that approximately $96\%$ of the cluster lay on the perimeter (i.e. had at least one vacant adjacent site), and the box dimension was unchanged. Indeed, even when performing a weighted box dimension calculation, matching \cite{Hanan2001}, the dimension remained unchanged. For this particular cluster, it was $1.685$ across all four combinations. This suggests that the persistent discrepancy is not a finite-size measurement artefact, but rather suggests these metrics capture fundamentally different properties. $D_{\mathrm{box}}$ measures the global, static spatial capacity of the aggregate, whereas $D_{\beta}$ captures the dynamic growth. As our results show, these two properties need not align perfectly in finite macroscopic simulations.
 
-Second, the growth dimension ($D_{\beta}$) exposes a much larger inter-model discrepancy than the box dimension. At $N=10^7$, the $D_{box}$ values across all three models are highly consistent, falling within a single standard deviation of one another. Conversely, the Lattice and Hybrid models yield $D_{\beta}$ values more than two standard deviations below the Off-Lattice baseline. While there is a marginal inversion in the directional trend of the minor $D_{box}$ variances relative to $D_{\beta}$, the effect size in $D_{box}$ is too small to draw robust physical conclusions, leading us to focus primarily on the significant divergence in the growth metric.
+Second, the growth dimension ($D_{\beta}$) exposes a much larger inter-model discrepancy than the box dimension. At $N=10^7$, the $D_{box}$ values across all three models are highly consistent; while the Off-Lattice estimate ($1.682 \pm 0.002$) is nominally lower than the Lattice value ($1.685 \pm 0.002$), the difference is marginal and the values remain within a single standard deviation of one another. Conversely, the Lattice and Hybrid models yield $D_{\beta}$ values more than two standard deviations below the Off-Lattice baseline of $1.714$.
 
-A limitation of both our analysis so far and the wider literature, is comparing these quantities at specific cluster sizes. As it is impossible to know at what scale we truly no longer have finite size effects, a potentially more useful comparison is that of the evolution of $D_{box}$ and $D_\beta$ as the cluster grows. To our knowledge, mapping this continuous evolutionary comparison constitutes a novel contribution. This evolution is presented in \Cref{fig:dim_evolution}.
+A limitation of both our analysis so far and the wider literature, is comparing these quantities at specific cluster sizes. As it is impossible to know at what scale we truly no longer have finite size effects, a potentially more useful comparison is that of the evolution of $D_{box}$ and $D_\beta$ as the cluster grows. To our knowledge, mapping this continuous evolutionary comparison constitutes a novel contribution. This evolution is presented in \cref{fig:dim_evolution}.
 
 \begin{figure}[htbp]
   \centering
@@ -1194,7 +1213,7 @@ A limitation of both our analysis so far and the wider literature, is comparing 
 As shown in \cref{fig:dim_evolution}, the box dimension evolves similarly across all three models, while the growth dimension is clearly distinct in the Off-Lattice model from the other two models. 
 This suggests that while $D_{\beta}=1/\beta$ may be a valuable metric in and of itself, using it as a proxy for the dimension may in fact be misleading for finite sized clusters. 
 
-We theorise that for asymptotically large clusters, the two metrics may eventually converge in the Off-Lattice model, as the massive scale of the active outer shell begins to vastly outnumber the sparser inner core. While the trajectory in the left-hand panel of \Cref{fig:dim_evolution} supports this hypothesis, providing definitive empirical evidence would require simulating clusters at scales currently beyond our computational limits. 
+We theorise that for asymptotically large clusters, the two metrics may eventually converge in the Off-Lattice model, as the massive scale of the active outer shell begins to vastly outnumber the sparser inner core. While the trajectory in the left-hand panel of \cref{fig:dim_evolution} supports this hypothesis, providing definitive empirical evidence would require simulating clusters at scales currently beyond our computational limits. 
 Conversely, the evolutionary trends for the Lattice and Hybrid models suggest such convergence is less likely, though finite-size constraints again prevent absolute conclusions.
 
 Ultimately, it is crucial to recognize that a finite DLA simulation is not a true mathematical fractal, but rather a pre-fractal physical approximation. Consequently, no single finite-size spatial statistic can perfectly capture its theoretical dimension. While the box-counting dimension is the more rigorously accepted standard for quantifying spatial scaling, the widespread use of the growth rate as a proxy ($D_\beta$) introduces nuances that must be carefully managed. Nevertheless, the growth rate ($\beta$) and its inverse remain fundamentally important parameters for characterising the transport dynamics of the model. In alignment with established literature, we will continue to refer to $D_\beta$ as a `dimension' for the remainder of this work, whilst explicitly acknowledging the mathematical distinctions between these geometric and kinetic measurements.
@@ -1204,30 +1223,30 @@ Ultimately, it is crucial to recognize that a finite DLA simulation is not a tru
 \label{sec:dim_model_comparison}
 Regardless of the inconsistencies across the two metrics and their cause, a key feature prevalent in both is the similarity between the Hybrid and Lattice models. This is in line with the visuals in \cref{ch:results}, where the density maps appear almost identical. Looking at the specific numbers in \cref{tab:dim_results}, the dimension statistics are indeed very closely aligned.
 
-This behavioral split is evident when analysing the growth dimension ($D_{\beta}$) at the maximum simulated aggregate size of $N=10^7$ particles. As shown in \cref{tab:dim_results}, the Hybrid model yields a growth dimension of $1.674 \pm 0.014$, which is statistically indistinguishable from the Lattice model's $1.682 \pm 0.016$. The standard deviations of these two models heavily overlap, something which can be visually verified in \cref{fig:dim_histograms_combined}.
+This behavioural split is evident when analysing the growth dimension ($D_{\beta}$) at the maximum simulated aggregate size of $N=10^7$ particles. As shown in \cref{tab:dim_results}, the Hybrid model yields a growth dimension of $1.674 \pm 0.014$, which is not separable from the Lattice model's $1.682 \pm 0.016$. The standard deviations of these two models heavily overlap, something which can be visually verified in \cref{fig:dim_histograms_combined}.
 
-In contrast, the Off-Lattice model maintains a significantly higher growth dimension of $1.714 \pm 0.013$. Using the standard deviations as a proxy for uncertainty, we observe a distinct, statistically significant separation between this model and the two grid-based models. The gap between the Off-Lattice mean and the Hybrid mean ($\Delta \approx 0.04$) is nearly three times larger than their respective standard deviations, strongly confirming that the lattice constraints enforce a physically distinct, accelerated radial expansion. 
+In contrast, the Off-Lattice model maintains a significantly higher growth dimension of $1.714 \pm 0.013$. Using the standard deviations as a descriptive measure of spread, we observe a distinct separation between this model and the two grid-based models. The gap between the Off-Lattice mean and the Hybrid mean ($\Delta \approx 0.04$) is nearly three times larger than their respective standard deviations, supporting the claim that the lattice constraints enforce a physically distinct, accelerated radial expansion. 
 
-Crucially, this structural divergence is not merely a boundary effect localised to specific particle counts, but a consistent pattern in their evolution. Figure \cref{fig:dim_evolution} illustrates the dynamic evolution of both $D_{box}$ and $D_{\beta}$ across the three models from $N=10^5$ to $10^7$ particles. 
+Crucially, this structural divergence is not merely a boundary effect localised to specific particle counts, but a consistent pattern in their evolution. \cref{fig:dim_evolution} illustrates the dynamic evolution of both $D_{box}$ and $D_{\beta}$ across the three models from $N=10^5$ to $10^7$ particles. 
 
-As seen in the leftmost panel, the Off-Lattice model's kinetic dimension (red line) remains remarkably stable throughout its entire growth history, sitting rigidly within the theoretical $\sim 1.71$ target zone. However, the Lattice and Hybrid evolution plots (centre and right panels) exhibit very similar decay. Rather than maintaining a stable dimension, both models peel away from the theoretical baseline, their $D_{\beta}$ values steadily falling as the clusters grow larger.
+As seen in the leftmost panel, the Off-Lattice model's kinetic dimension (red line) remains stable throughout its entire growth history, sitting close to the theoretical $\sim 1.71$ target zone. However, the Lattice and Hybrid evolution plots (centre and right panels) exhibit very similar decay. Rather than maintaining a stable dimension, both models peel away from the theoretical baseline, their $D_{\beta}$ values steadily falling as the clusters grow larger.
 
-Furthermore, the continuous evolution plots reveal that the Box Dimensions ($D_{box}$) of the Lattice and Hybrid models share an identical, synchronised upward curvature. Intriguingly, this consistency in $D_{box}$ extends to the Off-Lattice model as well. Despite the stark divergence in their kinetic growth rates ($D_\beta$), all three models yield highly comparable box-counting dimensions ($D_{box} \approx 1.68$). This suggests that the static, space-filling capacity of the bulk aggregate is remarkably robust to the underlying spatial geometry, whereas the active outward expansion is highly sensitive to lattice anisotropy. So far in all respects the Hybrid and Lattice models are virtually indistinguishable, which is strong evidence for our hypothesis that the difference in aggregation is the primary driver of the structural differences between the different models, while the transport mechanism itself is not a significant factor.
+Furthermore, the continuous evolution plots reveal that the box dimensions ($D_{box}$) of the Lattice and Hybrid models share similar upward trends. Intriguingly, this consistency in $D_{box}$ extends to the Off-Lattice model as well. Despite the stark divergence in their kinetic growth rates ($D_\beta$), all three models yield comparable box-counting dimensions ($D_{box} \approx 1.68$). This suggests that the static, space-filling capacity of the bulk aggregate is robust to the underlying spatial geometry, whereas the growth rate is more sensitive to lattice anisotropy. So far in all respects the Hybrid and Lattice models are very similar in our simulations, which is strong evidence for our hypothesis that the difference in aggregation is the primary driver of the structural differences between the different models, while the transport mechanism itself is not a significant factor.
 
-Although this indistinguishability confirms the expected equivalence between the Hybrid and pure Lattice models as assumed by \citet{Menshutin2011}, it does not independently validate their subsequent claim that the dimension will eventually converge to Kesten's theoretical lower bound of 1.5. To reach that asymptotic conclusion, \citeauthor{Menshutin2011} employed noise-reduction techniques, requiring their antennae to be hit multiple times before aggregation occured. Since introducing noise reduction fundamentally modifies the microscopic aggregation rules, it may skew the underlying harmonic measure and risks altering the universality class of the fractal \cite{novotny1990}. While our own standard $D_\beta$ trajectories do exhibit a clear downward trend, the observed deceleration of this decay makes stabilisation at a higher mean-field value just as mathematically plausible. Ultimately, extrapolating the true asymptotic limit of standard DLA from noise-reduced approximations remains speculative, and our empirical evidence at $N=10^7$ particles is currently insufficient to definitively favour Kesten's limit over a higher stabilisation point.
+Although this indistinguishability confirms the expected equivalence between the Hybrid and pure Lattice models as assumed by \cite{Menshutin2011}, it does not independently validate their subsequent claim that the dimension will eventually converge to Kesten's theoretical lower bound of 1.5. To reach that asymptotic conclusion, Menshutin and Schur employed noise-reduction techniques, requiring their antennae to be hit multiple times before aggregation occurred. Since introducing noise reduction fundamentally modifies the microscopic aggregation rules, it may skew the underlying harmonic measure and risks altering the universality class of the fractal \cite{novotny1990}. While our own standard $D_\beta$ trajectories do exhibit a clear downward trend, the observed deceleration of this decay makes stabilisation at a higher mean-field value just as mathematically plausible. Ultimately, extrapolating the true asymptotic limit of standard DLA from noise-reduced approximations remains speculative, and our empirical evidence at $N=10^7$ particles is currently insufficient to definitively favour Kesten's limit over a higher stabilisation point.
 
 % =========================================
 % CHAPTER 6: Anisotropy Analysis
 % =========================================
 \chapter{Anisotropy in DLA}
 \label{ch:anisotropy}
-So far we have restricted our analysis to the fractal dimension and the (somewhat) related growth rate. Now we turn to a different property to directly describe the symmetry of the clusters: anisotropy.
+So far we have restricted our analysis to the fractal (box-counting) dimension and the (somewhat) related growth rate. Now we turn to a different property to directly describe the symmetry of the clusters: anisotropy.
 % 6.1 Explanation of Anisotropy
 \section{What is Anisotropy?}
 \label{sec:anisotropy_overview}
 An aggregate is isotropic if its macroscopic properties (e.g. growth rate) are statistically invariant under rotation. Off-Lattice DLA is theoretically isotropic, as the underlying transport and aggregation rules do not favour any particular direction. 
 
-Anisotropy occurs when this rotational symmetry is broken, resulting in preferential growth along specific directions. Early investigations, including those by \citet{meakin1986} and \citet{Ball1985}, demonstrated that simulating DLA on a discrete square lattice alters the continuous rotational symmetry. Even though the discrete random walk macroscopically approximates isotropic Brownian motion, the strictly localised, grid-restricted sticking rules force the microscopic branches to align orthogonally. Over millions of particle additions, these microscopic grid alignments compound, concentrating the harmonic measure towards the extreme tips of the primary Cartesian axes.
+Anisotropy occurs when this rotational symmetry is broken, resulting in preferential growth along specific directions. Early investigations, including those by \cite{meakin1986} and \cite{Ball1985}, demonstrated that simulating DLA on a discrete square lattice alters the continuous rotational symmetry. Even though the discrete random walk macroscopically approximates isotropic Brownian motion, the strictly localised, grid-restricted sticking rules force the microscopic branches to align orthogonally. Over millions of particle additions, these microscopic grid alignments compound, concentrating the harmonic measure towards the extreme tips of the primary Cartesian axes.
 
 To quantify this phenomenon, we decompose our global radius of gyration ($R_g$) and growth rate ($\beta$) into angular components. By partitioning the cluster into discrete angular sectors $\theta$, we can track the dynamic expansion of individual branches over time.
 
@@ -1235,7 +1254,7 @@ To quantify this phenomenon, we decompose our global radius of gyration ($R_g$) 
 \section{Angular Radius of Gyration}
 \label{sec:anisotropy_rg}
 
-We follow \citet{Grebenkov2017} in utilising the angular radius of gyration rather than the maximum sector radius to quantify directional growth in order to mitigate the greater statistical noise associated with tracking single-particle boundary tips. The 2D plane is partitioned into $n_s$ equal angular sectors $S_\theta$ originating from the centre of the cluster. For an aggregate of total mass $N$, the angular radius of gyration, $R_g(\theta, N)$, is given by:
+We follow \cite{Grebenkov2017} in utilising the angular radius of gyration rather than the maximum sector radius to quantify directional growth in order to mitigate the greater statistical noise associated with tracking single-particle boundary tips. The 2D plane is partitioned into $n_s$ equal angular sectors $S_\theta$ originating from the centre of the cluster. For an aggregate of total mass $N$, the angular radius of gyration, $R_g(\theta, N)$, is given by:
 
 \begin{equation*}
     R_g(\theta, N) = \left[ \frac{1}{n_\theta(N)} \sum_{i=1}^N |\mathbf{r}_i|^2 \cdot \mathbb{I}(\mathbf{r}_i \in S_\theta) \right]^{1/2}
@@ -1243,7 +1262,7 @@ We follow \citet{Grebenkov2017} in utilising the angular radius of gyration rath
 
 where $\mathbf{r}_i$ is the position vector of the $i$-th particle, $\mathbb{I}(\mathbf{r}_i \in S_\theta)$ is the indicator function (yielding 1 if the particle lies within sector $S_\theta$ and 0 otherwise), and $n_\theta(N)$ is the total number of particles occupying that specific sector at mass $N$.
 
-We set the number of sectors to $n_s = 360$, corresponding to $1^\circ$ angular wedges. We computed $R_g(\theta, N)$ at snapshots $N = 2^{10}$ to $N = 2^{23}$ particles for each of the $10^7$-particle clusters, and display the averages in \ref{fig:polar_semilog_combined}.
+We set the number of sectors to $n_s = 360$, corresponding to $1^\circ$ angular wedges. We computed $R_g(\theta, N)$ at snapshots $N = 2^{10}$ to $N = 2^{23}$ particles for each of the $10^7$-particle clusters, and display the averages in \cref{fig:polar_semilog_combined}.
 
 \begin{figure}[htbp]
     \centering
@@ -1253,31 +1272,31 @@ We set the number of sectors to $n_s = 360$, corresponding to $1^\circ$ angular 
     \label{fig:polar_semilog_combined}
 \end{figure}
 
-The Off-Lattice model exhibits a circular symmetry in the polar projection, with the semi-log plot showing a flat profile across all angles. In contrast, the Lattice and Hybrid models display a pronounced fourfold symmetry, with peaks at $0^\circ$, $90^\circ$, $180^\circ$, and $270^\circ$ corresponding to the Cartesian axes, and troughs at $45^\circ$, $135^\circ$, $225^\circ$, and $315^\circ$ corresponding to the diagonals. The semi-log plots also match this pattern. This is strong visual evidence of the anisotropic growth effects induced by the lattice constraints. The near identical profiles of the Lattice and Hybrid models at each snapshot is further evidence that the aggregation rule is the primary driver of this anisotropy.
+The Off-Lattice model exhibits a circular symmetry in the polar projection, with the semi-log plot showing a flat profile across all angles. In contrast, the Lattice and Hybrid models display a pronounced fourfold symmetry, with peaks at $0^\circ$, $90^\circ$, $180^\circ$, and $270^\circ$ corresponding to the Cartesian axes, and troughs at $45^\circ$, $135^\circ$, $225^\circ$, and $315^\circ$ corresponding to the diagonals. The semi-log plots also match this pattern. This is strong visual evidence of the anisotropic growth effects induced by the lattice constraints. The near identical profiles of the Lattice and Hybrid models at each snapshot are further evidence that the aggregation rule is the primary driver of this anisotropy.
 % 6.3 Grwoth Rate
 \section{Angular Growth Rate Analysis}  
 \label{sec:anisotropy_growth}
-While the angular radius of gyration effectively captures the spatial boundary at specific snapshots, it is ultimately an absolute distance metric. A likely more useful quantity for understanding the limiting behaviour is the angular growth rate, $\beta(\theta)$, which is a both dynamic and scale-invariant metric.
+While the angular radius of gyration effectively captures the spatial boundary at specific snapshots, it is ultimately an absolute distance metric. A likely more useful quantity for understanding the limiting behaviour is the angular growth rate, $\beta(\theta)$, which is both a dynamic and scale-invariant metric.
 
 To reveal the differential growth along the orientational extremes, we aggregate the angular radii of gyration $R_g(\theta, N)$ for the four Cartesian axes ($0^\circ, 90^\circ, 180^\circ, 270^\circ$) to define $R_{axis}(N)$, and for the four diagonal directions ($45^\circ, 135^\circ, 225^\circ, 315^\circ$) to define $R_{diag}(N)$. Because the number of particles in any individual $1^\circ$ sector is significantly smaller than the total cluster mass, local tip-growth fluctuations are high. To mitigate this statistical noise, we again follow the methodology of \cite{Grebenkov2017} by choosing relatively large aggregation sectors. We utilise four $11^\circ$ wedges centred on the respective axes and diagonals, and average the aggregated radii over the ensemble of $10^7$-particle clusters. This is displayed in \cref{fig:comparing_axes}.
 
 \begin{figure}[htbp]
     \centering
     \includegraphics[width=0.95\textwidth]{images/comparing_axes_10M.pdf}
-    \caption{Aggregated angular radii of gyration for the cardinal axes, $R_{axis}(N)$ (blue circles), and the diagonals, $R_{diag}(N)$ (red squares). Values are calculated by averaging across four $11^\circ$ directional wedges centred on their respective orientational angles. Radial snapshots were evaluated at logarithmically spaced mass intervals and averaged over the ensemble of $10^7$-particle clusters. L2 regressions (solid lines) are performed on the stable scaling regime ($N \ge 10^3$) to extract the regional growth rate exponents, $\beta_{axis}$ and $\beta_{diag}$.}    
+    \caption{Aggregated angular radii of gyration for the cardinal axes, $R_{axis}(N)$ (blue circles), and the diagonals, $R_{diag}(N)$ (red squares). Values are calculated by averaging across four $11^\circ$ directional wedges centred on their respective orientational angles. Radial snapshots were evaluated at logarithmically spaced mass intervals and averaged over the ensemble of $10^7$-particle clusters. $L^2$ regressions (solid lines) are performed on the stable scaling regime ($N \ge 10^3$) to extract the regional growth rate exponents, $\beta_{axis}$ and $\beta_{diag}$.}    
     \label{fig:comparing_axes}
 \end{figure}
 
-As depicted in \Cref{fig:comparing_axes}, the isotropic Off-Lattice model exhibits perfectly parallel scaling between its axial and diagonal components. However, for the Lattice and Hybrid models, the log-log scaling laws diverge. 
+As depicted in \cref{fig:comparing_axes}, the isotropic Off-Lattice model exhibits parallel scaling between its axial and diagonal components. However, for the Lattice and Hybrid models, the log-log scaling laws diverge. 
 Our growth rate numbers for the Lattice model are consistent with those of \cite{Grebenkov2017}, where for 100 clusters of size $N \approx 5 \times 10^7$ particles, they found $\beta_{axis} = 0.612$ and $\beta_{diag} = 0.535$. %slight difference in diagonals?
 
 To compare the different models quantitatively, we consider the ratio of the two growth rates $A_R=\beta_{axis}/\beta_{diag}$. A number near 1 indicates isotropy, while a number significantly above 1 indicates anisotropy. For the Off-Lattice model, we find $A_R = 1.001 \pm 0.069$, confirming its isotropic nature. The Lattice and Hybrid models, however, yield $A_R = 1.217 \pm 0.084$ and $A_R = 1.245 \pm 0.090$ respectively, indicating a significant anisotropic bias towards the Cartesian axes.
 
-The choice of a set of four 11° wedges is somewhat arbitrary, and chosen only to allow for a close comparison with \cite{Grebenkov2017}. We now introduce an additional, mathematically robust global statistic. 
+The choice of a set of four 11° wedges is somewhat arbitrary, and chosen only to allow for a close comparison with \cite{Grebenkov2017}. We therefore introduce an additional statistic without this dependence. 
 
-Drawing inspiration from the multipole expansions utilised in \cite{Ball2002}, we define a mathematically analogous metric, the Fourier Score ($C_4$), adapted specifically for our angular growth rates. To reduce noise we first downsample our $\beta(\theta)$ profile into 90 uniform 4° sectors (centered on axes). We then compute the discrete Fourier transform, extracting the magnitude of the 4th harmonic ($A_4$) and normalising it by the 0th harmonic $A_0$. 
+Drawing inspiration from the multipole expansions utilised in \cite{Ball2002}, we define a mathematically analogous metric, the Fourier Score ($C_4$), adapted specifically for our angular growth rates. To reduce noise we first downsample our $\beta(\theta)$ profile into 90 uniform 4° sectors (centred on axes). We then compute the discrete Fourier transform, extracting the magnitude of the 4th harmonic ($A_4$) and normalising it by the 0th harmonic $A_0$, i.e. $C_4 = \frac{|A_4|}{A_0}$. 
 
-An isotropic cluster theoretically yields $C_4 \approx 0$. As displayed in \cref{tab:anisotropy_stats}, the Off-Lattice model yields a score of $C_4 = 0.023 \pm 0.012$. In contrast, the Lattice and Hybrid models yield higher scores of $0.057 \pm 0.016$ and $0.062 \pm 0.016$ respectively. The divergence of this normalised coefficient from the isotropic noise floor is more evidence of the four-fold anisotropy governing the grid-constrained models, independent of the diffusion mechanism.
+An isotropic cluster theoretically yields $C_4 \approx 0$. As displayed in \cref{tab:anisotropy_stats}, the Off-Lattice model yields a score of $C_4 = 0.023 \pm 0.012$. In contrast, the Lattice and Hybrid models yield higher scores of $0.057 \pm 0.016$ and $0.062 \pm 0.016$ respectively. This is more evidence of the four-fold anisotropy governing the grid-constrained models, independent of the diffusion mechanism.
 \begin{table}[htbp]
     \centering
     \caption{Summary of angular anisotropy metrics for $10^6$ (1M) and $10^7$ (10M) particle clusters. Values are presented as the ensemble mean $\pm$ one standard deviation.}
@@ -1301,7 +1320,7 @@ An isotropic cluster theoretically yields $C_4 \approx 0$. As displayed in \cref
 To visualise the full angular profile of this divergence, we perform a coarse-grained angular growth analysis across the entire $360^\circ$ spectrum. We group our existing $1^\circ$ sector data into larger bins of $9^\circ$ (40 sectors); an odd integer factor of 360 was specifically chosen to ensure the bins align symmetrically across the cardinal axes.
 
 This is shown in \cref{fig:beta_coarse}, where the angular growth rate $\beta(\theta)$ is plotted against the angle $\theta$ for each model. The green dashed line indicates the global mean growth rate across all angles. There is a significant discrepancy between this mean value and the growth rates reported in \cref{tab:dim_results} in the case of the two anisotropic models. This is because here each wedge is weighted equally, while the overall growth rate uses the radius of gyration of the whole cluster, where a large proportion of the particles are in the axial wedges, which have a higher growth rate. 
-This is further evidence of the relationship between the growth dimension $D_{\beta}$ and anisotropy, highlighting its relative sensitivity when compared to the box dimension $D_{box}$
+This is further evidence of the sensitivity of the growth dimension $D_{\beta}$ to anisotropy.
 
 \begin{figure}[htbp]
     \centering
@@ -1313,7 +1332,7 @@ This is further evidence of the relationship between the growth dimension $D_{\b
 As expected, the Off-Lattice angular growth rate fluctuates stochastically around the theoretical isotropic mean, with no dominant directional preference. The Lattice and Hybrid models, however, display periodic oscillations aligned with the Cartesian axes. Because the growth rate is an exponent ($R_g \sim N^\beta$), even a small fractional difference between $\beta_{axes}$ and $\beta_{diagonals}$ results in an exponential separation in physical length.
 
 
-When resolving the angular growth rate with highly granular bins, a subtle but physically profound feature emerges in the Lattice and Hybrid models. Rather than peaking smoothly at $0^\circ$ and $90^\circ$, the angular growth rate $\beta(\theta)$ exhibits more complex behaviour, which varies depending on the bin-sizing. We display this phenomenon in \cref{fig:beta_fine}, where we plot $\beta(\theta)$ for the Lattice model at three different bin sizes: $9^\circ$, $3^\circ$, and $1^\circ$ wedges.
+When resolving the angular growth rate with highly granular bins (the angular wedges), a subtle but potentially important feature emerges in the Lattice and Hybrid models. Rather than peaking smoothly at $0^\circ$ and $90^\circ$, the angular growth rate $\beta(\theta)$ exhibits more complex behaviour, which varies depending on the bin-sizing. We display this phenomenon in \cref{fig:beta_fine}, where we plot $\beta(\theta)$ for the Lattice model at three different bin sizes: $9^\circ$, $3^\circ$, and $1^\circ$ wedges.
 
 \begin{figure}[htbp]
     \centering
@@ -1322,8 +1341,8 @@ When resolving the angular growth rate with highly granular bins, a subtle but p
     \label{fig:beta_fine}
 \end{figure}
 
-In \cref{fig:beta_fine}, the fine $1^\circ$ binning reveals that there is a sort of `W'-shaped pattern in the profile along each axis, with an extreme spike exactly on axis accompanied by a significant dip in the adjacent bins. Looking at the $3^\circ$ binning, we now lose the central spike, and just see a slight dip on axis. To our knowledge this phenomenon is so far undocumented in the literature.
-Further binning results in a smoothing out the entire profile in the $9^\circ$ case. This is a salient example of how the choice of binning can have a significant effect on the resulting profile, and how the underlying mechanics can be obscured by coarse-graining. 
+In \cref{fig:beta_fine}, the fine $1^\circ$ binning reveals that there is a `W'-shaped profile along each axis, with an extreme spike exactly on axis accompanied by a significant dip in the adjacent bins. Looking at the $3^\circ$ binning, the central spike is no longer visible, and the profile instead shows a slight dip on axis. We are not aware of a comparable observation in the literature reviewed here.
+Further binning results in a smoothing out of the entire profile in the $9^\circ$ case, matching the results in \cite{Grebenkov2017}. This illustrates how the choice of binning can have a significant effect on the resulting profile, and how the underlying mechanics can be obscured by coarse-graining. 
 
 Notably, this shadowing effect was observed in both the Lattice and Hybrid models on all four axes, suggesting it is not simply a product of stochastic noise, but again another characteristic of the lattice-influenced geometry. While the exact cause could warrant further investigation, its presence in both models is again further evidence of the structural equivalence between the two models. 
 
@@ -1332,23 +1351,20 @@ Notably, this shadowing effect was observed in both the Lattice and Hybrid model
 % =========================================
 \chapter{Conclusion}
 \label{ch:conclusion}
-The primary objective of this dissertation was to investigate the underlying physical mechanisms driving the structural divergence between continuous and discrete models of Diffusion-Limited Aggregation (DLA). We adapted existing algorithms for both Lattice and Off-Lattice DLA, leveraging established results from potential theory and complex analysis to simulate cluster growth with high computational efficiency. We believe our implementations of these algorithms to be the most advanced in Python. This enabled the generation of a robust statistical ensemble of massive aggregates, including 300 clusters grown to $10^7$ particles each. 
 
-Crucially, this research expands upon the literature by introducing several frameworks that, to the best of our knowledge, represent novel methodological and analytical contributions to the field. This includes a bespoke implementation of a controlled Hybrid DLA algorithm, designed to isolate the random-walk diffusion process from the lattice-constrained aggregation geometry. To ensure the mathematical integrity of our results, we employed the outlier-resistant Theil-Sen estimator as a calibration tool. By comparing a representative sample of clusters against this robust benchmark, we successfully identified the optimal spatial scaling regimes and verified that our production Ordinary Least Squares (L2) regressions remained free from systematic boundary-effect bias. This validation enabled us to provide evidence that the macroscopic growth dimension ($D_\beta$) serves as an imperfect proxy for the more mathematically grounded box dimension $D_{box}$. Furthermore, we conducted a angular analyses of the growth kinetics. This high-resolution profiling uncovered an acute, highly localised `shadowing' effect immediately off-axis in the grid-constrained models.
+The primary objective of this dissertation was to investigate the mechanisms underlying the structural differences between discrete and continuous models of Diffusion-Limited Aggregation (DLA). To this end, we combined standard potential-theoretic ideas with accelerated simulation methods for both Lattice and Off-Lattice DLA, and used these to generate large statistical ensembles of aggregates, including 100 clusters of size $10^7$ in each model. This provided a computational basis for a controlled comparison of macroscopic growth across the discrete and continuous settings.
 
-Collectively, our findings provide compelling evidence that the macroscopic anisotropy observed in discrete DLA is driven almost entirely by the local grid aggregation geometry, with no observable influence from the underlying diffusion mechanism. We verified this structural equivalence via our detailed comparative analyses of the Lattice, Off-Lattice, and Hybrid models.
+The work presented here is not intended as a new theoretical foundation for DLA, but rather as a structured computational and analytical study built on existing mathematical and numerical frameworks. Within that framework, the dissertation makes several concrete contributions. First, it develops and implements a controlled Hybrid DLA model designed to separate, as far as possible, the role of the diffusion process from that of lattice-constrained aggregation geometry. Second, it uses a calibration procedure based on the Theil-Sen estimator to identify suitable fitting regimes for large-scale dimension estimates and to check that the production $L^2$ fits are not visibly dominated by boundary effects in the ranges considered. Third, it compares the growth-based dimension $D_\beta$ with the box dimension $D_{\mathrm{box}}$, providing evidence that these quantities need not coincide as finite-size descriptors of DLA clusters. Finally, it supplements the dimension analysis with angular growth statistics, which reveal a sharply localised reduction in growth immediately off the principal lattice axes in the grid-constrained models.
 
-While several specific avenues for further investigation have been highlighted throughout the preceding chapters, key areas for immediate methodological extension include:
+Taken together, these results support the view that, for the three models studied here and at the scales examined, the macroscopic anisotropy of square-lattice DLA is driven primarily by the aggregation geometry rather than by the transport mechanism alone. In particular, the Hybrid and Lattice models remain close to one another in both dimension estimates and angular growth statistics, while the Off-Lattice model behaves differently. This does not prove that transport effects are absent in general, nor does it rule out subtler differences emerging at larger scales or under different diagnostics. It does, however, indicate that the local geometric constraint imposed at the point of aggregation is the dominant source of the observed structural divergence in the present simulations.
+
+Several directions for further work arise naturally from this study. The most immediate are:
 \begin{itemize}
-    \item \textbf{Direct analysis of the harmonic measure:} Our DLA algorithms could be adapted to estimate the harmonic measure of the cluster surface directly via the release of non-aggregating probe particles, mapping the exact probability distribution.
-    \item \textbf{A `Reverse' Hybrid model:} To complement the Hybrid model developed in this study, a reverse variant could be implemented utilising discrete lattice-based random walks for transport, but switching to a continuous aggregation method upon collision. Testing whether this model successfully recovers the isotropic morphology of Off-Lattice DLA would provide the final, definitive proof that transport mechanics have no bearing on macroscopic shape.
-
+    \item \textbf{Direct analysis of harmonic measure:} The simulation framework could be adapted to estimate the harmonic measure on the cluster boundary directly, for example by releasing non-aggregating probe particles and recording their hitting distribution. This would provide a more direct link between the probabilistic growth rule and the observed morphology.
+    \item \textbf{A `Reverse' Hybrid model:} A complementary model could be constructed in which transport is performed by a lattice random walk, but aggregation is treated continuously using exact adhesion. Comparing such a model with those studied here would provide a further test of the relative influence of transport and aggregation geometry.
 \end{itemize}
 
-\vspace{0.5em}
-Ultimately, this dissertation demonstrates that, while the rules governing Diffusion Limited Aggregation are profoundly simple, the compounding effects of probabilistic diffusion rules, along with geometric constraints, yield complexities that remain a rich area of ongoing study. 
-
-
+Ultimately, this dissertation shows that even very simple local growth rules can produce subtle and model-dependent large-scale structure. By combining ideas from probability, potential theory, and large-scale computation, it provides further evidence that the geometry of aggregation plays a central role in shaping DLA clusters, while also highlighting the limits of what can be concluded from finite simulations alone.
 
 
 
@@ -1419,7 +1435,11 @@ In the study of potential theory, we will want to understand the relationship be
 
 
 We begin by defining absolute continuity between two measures, which is a necessary pre-requisite.
-\noindent \textit{Remark:} throughout this work, we assume our measurable spaces are equipped with the Borel $\sigma$-algebra.
+\begin{remark}
+Throughout this work, we assume our measurable spaces are equipped with the Borel $\sigma$-algebra.
+
+\end{remark} 
+
 \begin{definition}[Absolute Continuity]
 Let $(\Omega, \mathcal{F})$ be a measurable space equipped with two measures $\mu$ and $\nu$. We say that $\nu$ is absolutely continuous with respect to $\mu$, denoted $\nu \ll \mu$, if for every $A \in \mathcal{F}$:
 \begin{equation*}
@@ -1442,29 +1462,6 @@ The function $f$ is called the Radon-Nikodym derivative of $\nu$ with respect to
 See \citet[Section 14.13]{Williams1991}.
 \end{proof}
 
-%add LCLT and also Ito's Lemma?
-
-\section{Conformal Maps}
-
-Here we state the definition of a conformal map, and the Riemann mapping theorem, both from \citet{Ahlfors1979}. Conformal maps will be very important for two reasons: theoretically, the Riemann Mapping Theorem guarantees that the Dirichlet problem in \cref{ch:theory} is well-posed even on the potentially fractal boundary of a DLA cluster. Algorithmically, these maps allow us to exploit the `conformal invariance' of Brownian motion, which we discuss in the \cref{ch:theory} and \cref{ch:algorithms}.
-%remove conformal map defintion?
-\begin{definition}[Conformal Map]
-Let $U, V \subseteq \mathbb{C}$ be open sets. A function $f \colon U \to V$ is called \textbf{conformal} at a point $z_0 \in U$ if it preserves angles and orientation locally. 
-
-Analytically, a holomorphic function $f$ is conformal at every point where its derivative is non-zero, i.e., $f'(z) \neq 0$. If $f$ is a holomorphic bijection between $U$ and $V$ (a biholomorphism), it is essentially a global conformal map, and we say $U$ and $V$ are conformally equivalent.
-\end{definition}
-
-\begin{theorem}[Riemann Mapping Theorem]
-Let $U \subsetneq \mathbb{C}$ be a non-empty, simply connected open subset of the complex plane. Then, there exists a unique bijective conformal map $f$ from $U$ onto the open unit disk $\mathbb{D} = \{z \in \mathbb{C} : |z| < 1\}$ such that:
-\begin{equation*}
-    f(z_0) = 0 \quad \text{and} \quad f'(z_0) > 0,
-\end{equation*}
-for any prescribed point $z_0 \in U$.
-\end{theorem}
-
-\begin{proof}
-See \citet[Chapter 6.1]{Ahlfors1979}.
-\end{proof}
 
 %%% -------------- %%%
 %%% Appendix B
@@ -1477,10 +1474,12 @@ While \cref{ch:algorithms} outlines the mathematical principles of the algorithm
 
 The Lattice and Off-Lattice versions of the algorithm are versions of code created by Loh \cite{Loh2014} and Bell \cite{Bell2019} respectively. However, these were originally done in C and C++, and in translating to Python our implementation diverges both to account for differences in the language structure, and to account for the limitations of our computer (a 2017 Macbook with 8GB RAM). We will highlight some of these changes here, as well as explain some of the more programming-related concepts and structures behind the algorithms.
 
+For additional background and explanations of the algorithms and data structures used, see \cite{Cormen2009}.
+
 \section{Computational Framework}
 
 \subsection{The Numba JIT Compiler}
-The simulations are implemented in Python to leverage its flexibility, to be consistent with the analysis section of this project, and as it is the language we are most comfortable with. The core numerical routines are decorated with \texttt{@njit(fastmath=True)}. This compiles the Python bytecode into optimised LLVM machine code at runtime, allowing for performance parity with C++ while maintaining a modular, functional codebase. Our code is likely somewhat slower than the original implementations, but the JIT compiler mitigates this difference.
+The simulations are implemented in Python to leverage its flexibility, and to be consistent with the analysis code. The core numerical routines are decorated with \texttt{@njit(fastmath=True)}. This compiles the Python bytecode into optimised LLVM machine code at runtime, allowing for performance parity with C++ while maintaining a modular, functional codebase. Our code is likely somewhat slower than the original implementations, but the JIT compiler mitigates this difference.
 
 \subsection{Rounding Semantics}
 One minor but important detail to consider in stochastic simulations is the rounding behaviour of floating-point co-ordinates, particularly in the Lattice and Hybrid models where the output is in integers.
@@ -1607,11 +1606,11 @@ As established by \citet{Loh2014}, the continuous flux serves as a valid envelop
 \subsection{Motivation}
 For the Walk-to-Square algorithm, we must sample the exit location of a walker from the boundary of a square. This distribution is non-uniform (the exit probability is highest at the midpoints of the edges and lowest at the corners).
 
-A naive approach would be to search a Cumulative Distribution Function (CDF). For a square of perimeter $N$, this requires a binary search, scaling as $\mathcal{O}(\log N)$. As the square size increases (e.g., $N=2048$ for a $512 \times 512$ square), this $\log N$ cost inside the inner loop becomes a significant bottleneck.
+One approach would be to search a Cumulative Distribution Function (CDF). For a square of perimeter $N$, this requires a binary search, scaling as $\mathcal{O}(\log N)$. As the square size increases (e.g., $N=2048$ for a $512 \times 512$ square), this $\log N$ cost inside the inner loop becomes a significant bottleneck.
 
 To eliminate this overhead, we follow Loh and implement Walker's Alias Method, which reduces the sampling complexity to $\mathcal{O}(1)$—constant time, regardless of the square size.
 
-Essentially the Alias Method works by reshaping the uneven probability histogram into a perfectly rectangular block.
+Essentially the Alias Method works by reshaping the uneven probability histogram into a rectangular block.
 
 Imagine the probability mass function as a set of vertical bars. We normalise them so the average height is 1. The method then slices the excess height from over-full bins (where $P > 1$) and moves these blocks to fill the gaps in the under-full bins (where $P < 1$).
 
@@ -1645,7 +1644,7 @@ Sampling is then performed by first a discrete uniform random sample, and then a
 \subsection{Custom Bessel Functions}
 The Kaiser-Bessel launching distribution requires the Modified Bessel Function of the first kind, $I_0(x)$.
 The standard Python implementation, \texttt{scipy.special.i0}, is not supported in Numba's \texttt{nopython} mode (as it links to C Fortran libraries not visible to the JIT compiler).
-We therefore implemented the polynomial approximation from \citet{Abramowitz1965} (Eq. 9.8.1) directly in Python/Numba. This ensures that the launching bias correction is applied efficiently without breaking the JIT compilation chain or requiring callbacks to the Python interpreter.
+We therefore implemented the polynomial approximation from \cite{Abramowitz1965} (Eq. 9.8.1) directly in Python/Numba. This ensures that the launching bias correction is applied efficiently without breaking the JIT compilation chain or requiring callbacks to the Python interpreter.
 
 \section{Usability and Data Management}
 \label{app:usability}
@@ -1664,7 +1663,7 @@ This ensures the simulation domain dynamically scales to accommodate the target 
 \subsection{Standardised Coordinate Output}
 The internal state representations of the two models are fundamentally different: the Lattice model uses a boolean bit-map of occupancy, while the Off-Lattice model uses complex floating-point numbers with a particle radius $r=1$ (effective diameter $d=2$).
 
-To enable a unified analysis pipeline, we implemented a standardisation layer that normalises both outputs into an identical format: a standardised $(N, 2)$ array of dimensionless coordinates.
+To enable unified analysis, we implemented a standardisation layer that normalises both outputs into an identical format: a standardised $(N, 2)$ array of dimensionless coordinates.
 
 \begin{itemize}
     \item \textbf{Lattice Conversion:} We convert the sparse bit-map into a list of integer coordinates representing the centres of the occupied sites, shifting the seed to the origin $(0,0)$. We also ensure these are only the occupied cells, as Loh's code includes the sticky sites as well.

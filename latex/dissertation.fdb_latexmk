@@ -1,18 +1,17 @@
 # Fdb version 4
-["bibtex dissertation"] 1773927216.28377 "dissertation.aux" "dissertation.bbl" "dissertation" 1773928545.68332 0
-  "./references.bib" 1773924318.03068 14997 ef66a94022281a6cb7fea38d9a2c3358 ""
+["bibtex dissertation"] 1774016095.10283 "dissertation.aux" "dissertation.bbl" "dissertation" 1774016116.07761 0
+  "./references.bib" 1774016050.08456 15300 0d9b09426de34769136f60c17ed26bb4 ""
   "/usr/local/texlive/2024/texmf-dist/bibtex/bst/natbib/unsrtnat.bst" 1233624470 24550 a41a6405f4de768c43e871d9fbce2bc8 ""
-  "dissertation.aux" 1773928543.82148 37049 57f433a0898b8097c2be96be05958d33 "pdflatex"
+  "dissertation.aux" 1774016112.96 37046 ee3f09de31de53ca054240e58eed31e4 "pdflatex"
   (generated)
   "dissertation.bbl"
   "dissertation.blg"
   (rewritten before read)
-["pdflatex"] 1773928525.67919 "/Users/ramsaydavis/dla/latex/dissertation.tex" "dissertation.pdf" "dissertation" 1773928545.68386 0
-  "/Users/ramsaydavis/dla/latex/dissertation.tex" 1773928524.65187 142614 77e0d91861e9cbaed758e69628fc8840 ""
+["pdflatex"] 1774016095.96004 "/Users/ramsaydavis/dla/latex/dissertation.tex" "dissertation.pdf" "dissertation" 1774016116.07822 0
+  "/Users/ramsaydavis/dla/latex/dissertation.tex" 1774016049.84671 142991 399294fdb5f37c897a8824f566e946f6 ""
   "/usr/local/texlive/2024/texmf-dist/fonts/enc/dvips/cm-super/cm-super-t1.enc" 1136849721 2971 def0b6c1f0b107b3b936def894055589 ""
   "/usr/local/texlive/2024/texmf-dist/fonts/enc/dvips/cm-super/cm-super-ts1.enc" 1136849721 2900 1537cc8184ad1792082cd229ecc269f4 ""
   "/usr/local/texlive/2024/texmf-dist/fonts/map/fontname/texfonts.map" 1577235249 3524 cb3e574dea2d1052e39280babc910dc8 ""
-  "/usr/local/texlive/2024/texmf-dist/fonts/tfm/jknappen/ec/ecbi1200.tfm" 1136768653 3072 ccae1a240ab272417e4399fe942df546 ""
   "/usr/local/texlive/2024/texmf-dist/fonts/tfm/jknappen/ec/ecbx0800.tfm" 1136768653 3584 269b66e921ba58750c12f7f1c8ea3ebd ""
   "/usr/local/texlive/2024/texmf-dist/fonts/tfm/jknappen/ec/ecbx1000.tfm" 1136768653 3584 2d666ecf6d466d8b007246bc2f94d9da ""
   "/usr/local/texlive/2024/texmf-dist/fonts/tfm/jknappen/ec/ecbx1095.tfm" 1136768653 3584 21b378cca2e40816b0e6d74a4dc98f04 ""
@@ -77,7 +76,6 @@
   "/usr/local/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy8.pfb" 1248133631 32626 4f5c1b83753b1dd3a97d1b399a005b4b ""
   "/usr/local/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/euler/eufm10.pfb" 1336858727 21098 d4aee7c0aac232caac5688b586b9363c ""
   "/usr/local/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm10.pfb" 1248133631 34694 ad62b13721ee8eda1dcc8993c8bd7041 ""
-  "/usr/local/texlive/2024/texmf-dist/fonts/type1/public/cm-super/sfbi1200.pfb" 1215737283 205875 5958bf9326f04501f7006947acfbcae1 ""
   "/usr/local/texlive/2024/texmf-dist/fonts/type1/public/cm-super/sfbx0800.pfb" 1215737283 164252 e0fa571e05777bac365ddd5bdf6e8800 ""
   "/usr/local/texlive/2024/texmf-dist/fonts/type1/public/cm-super/sfbx1000.pfb" 1215737283 145408 43d44302ca7d82d487f511f83e309505 ""
   "/usr/local/texlive/2024/texmf-dist/fonts/type1/public/cm-super/sfbx1095.pfb" 1215737283 154600 ea54091d31de803b613ba9e80ca51709 ""
@@ -259,6 +257,7 @@
   "/usr/local/texlive/2024/texmf-dist/tex/latex/relsize/relsize.sty" 1369619135 15542 c4cc3164fe24f2f2fbb06eb71b1da4c4 ""
   "/usr/local/texlive/2024/texmf-dist/tex/latex/rerunfilecheck/rerunfilecheck.sty" 1657483315 9714 ba3194bd52c8499b3f1e3eb91d409670 ""
   "/usr/local/texlive/2024/texmf-dist/tex/latex/setspace/setspace.sty" 1670275497 22490 8cac309b79a4c53a4ffce4b1b07aead0 ""
+  "/usr/local/texlive/2024/texmf-dist/tex/latex/titlesec/titlesec.sty" 1698436711 48766 0b93839be28e9744a24c45075c75b2e2 ""
   "/usr/local/texlive/2024/texmf-dist/tex/latex/tools/xspace.sty" 1686341992 4545 9f5ea23ab1c91476c42749893f790666 ""
   "/usr/local/texlive/2024/texmf-dist/tex/latex/url/url.sty" 1388531844 12796 8edb7d69a20b857904dd0ea757c14ec9 ""
   "/usr/local/texlive/2024/texmf-dist/tex/latex/xcolor/xcolor.sty" 1700082560 55487 80a65caedd3722f4c20a14a69e785d8f ""
@@ -266,11 +265,11 @@
   "/usr/local/texlive/2024/texmf-var/fonts/map/pdftex/updmap/pdftex.map" 1740675583.32708 5467645 128b85b7cde5f5edc5cb7f1dd7ff8736 ""
   "/usr/local/texlive/2024/texmf-var/web2c/pdftex/pdflatex.fmt" 1740675457 8221422 02ba7606d53eeddb5fed6abede84bcfd ""
   "/usr/local/texlive/2024/texmf.cnf" 1710266656 577 e590dabc9e28c5b61546e15f63eebcdf ""
-  "dissertation.aux" 1773928543.82148 37049 57f433a0898b8097c2be96be05958d33 "pdflatex"
-  "dissertation.bbl" 1773927216.7179 10180 35cdee642ceca3aab636d1daddabbdbe "bibtex dissertation"
-  "dissertation.out" 1773928543.83185 13628 e9cfe99c3f5a24cd0e21efd80374c969 "pdflatex"
-  "dissertation.tex" 1773928524.65187 142614 77e0d91861e9cbaed758e69628fc8840 ""
-  "dissertation.toc" 1773928543.83356 7058 f1d4253294776c50fe7850239b8d5559 "pdflatex"
+  "dissertation.aux" 1774016112.96 37046 ee3f09de31de53ca054240e58eed31e4 "pdflatex"
+  "dissertation.bbl" 1774016095.93027 10252 d593e88e79a78dfa66c5bf9f6602b877 "bibtex dissertation"
+  "dissertation.out" 1774016112.97038 13499 0adda2f74c3bff46ad25552f90dfafc5 "pdflatex"
+  "dissertation.tex" 1774016049.84671 142991 399294fdb5f37c897a8824f566e946f6 ""
+  "dissertation.toc" 1774016112.97174 6983 50dfb68593b94ccf037ebfe8fac2bff6 "pdflatex"
   "images/batch_dimension_evolution.pdf" 1773495043.41617 30844 2551aa92d5f55d244e9fe07d6c4ca323 ""
   "images/beta_coarse_10M.pdf" 1772965050.28463 17755 3033213c4d23c34711977f9796256152 ""
   "images/beta_fine_10M.pdf" 1772965069.23124 20948 f6c473adbfd8a805e56dafccdf4bf188 ""
